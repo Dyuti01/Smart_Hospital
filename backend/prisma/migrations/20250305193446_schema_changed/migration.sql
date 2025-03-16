@@ -1,0 +1,9 @@
+-- AlterTable
+ALTER TABLE "Doctor" ALTER COLUMN "title" DROP NOT NULL,
+ALTER COLUMN "rating" DROP NOT NULL,
+ALTER COLUMN "reviewCount" DROP NOT NULL,
+ALTER COLUMN "experience" DROP NOT NULL,
+ALTER COLUMN "about" DROP NOT NULL;
+
+-- AlterTable
+ALTER TABLE "Patient" ALTER COLUMN "bloodType" DROP NOT NULL;

@@ -1,0 +1,15 @@
+{
+  "name": "@dyuti_01/smart_clinic",
+  "version": "1.0.3",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "zod": "^3.24.2"
+  }
+}

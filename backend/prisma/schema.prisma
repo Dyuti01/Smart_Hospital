@@ -1,0 +1,295 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// On signup the user gets entried into tables User, Patient or Doctor (depending on whether Patient or Doctor)
+// During delete acccount we need to check whether userType is both patient and doctor  since then need to delete from the other table also
+model User{
+  userId String @id @default(uuid())
+  firstName String
+  lastName String
+  gender String?
+  email String? @unique
+  password String?
+  dateOfBirth String?
+  city String?
+  state String?
+  pin String?
+  phone String? @unique
+  userType String?
+  userPatient Patient?
+  userDoctor Doctor?
+  userStaff Staff?
+  avatarUrl String @default("/avatar.svg")
+}
+
+model Patient{
+  id String @id @default(uuid())
+  patientId String @unique
+  patient User @relation(fields: [patientId], references: [userId], onDelete: Cascade)
+  emergencyContact String?
+  bloodType String?
+  allergies String[]
+  chronicConditions String[]
+  previousAppointmentIds String[]
+  testReports Report[]
+  appointments Appointment[]
+  paymentHistoryIds Payment[]
+  prescriptions Prescription[]
+  // doctorsListVisited we have this in appointment
+}
+
+// We can find the doctors list for patient and the patient list for a doctor using the appointment relation
+// Don't need to create another patient-doctor relation
+
+// model Doctor{
+  // doctorId String @unique
+  // doctor User @relation(fields: [doctorId], references: [userId], onDelete: Cascade)
+//   degree String
+//   university String
+//   availability String
+//   experience String  // in years with field of experience
+//   speciality String
+//   patientAppointments Appointment[]
+//   prescriptions Prescription[]
+//   testReports Report[]
+// }
+
+model Doctor {
+  // id String @id @default(uuid())
+  doctorId String @id @unique
+  doctor User @relation(fields: [doctorId], references: [userId], onDelete: Cascade)
+  // name           String
+  department String?
+  title          String?
+  rating         Float?
+  reviewCount    Int?
+  experience     String?
+  // email          String     @unique
+  // phone          String
+  // location       String
+  bookingFee     Int
+  about          String?
+  registrationNumber String
+  education      Education[]
+  certifications String[]
+  specializations String[]
+  languages      String[] @default(["English"])
+  availability   Availability?
+  patientAppointments Appointment[]
+  prescriptions Prescription[]
+  testReports Report[]
+  status   String @default("Active")
+}
+
+model Education {
+  id         String  @id @default(uuid())
+  degree     String
+  university String
+  year       String
+  doctorId   String
+  doctor     Doctor  @relation(fields: [doctorId], references: [doctorId], onDelete: Cascade)
+}
+
+model Availability {
+  id       String @id @default(uuid())
+  doctorId String @unique
+  doctor   Doctor @relation(fields: [doctorId], references: [doctorId], onDelete: Cascade)
+  timeslots TimeSlot[]
+
+  monday   TimeSlot[] @relation("MondayAvailability")
+  tuesday  TimeSlot[] @relation("TuesdayAvailability")
+  wednesday TimeSlot[] @relation("WednesdayAvailability")
+  thursday TimeSlot[] @relation("ThursdayAvailability")
+  friday   TimeSlot[] @relation("FridayAvailability")
+  saturday TimeSlot[] @relation("SaturdayAvailability")
+  sunday   TimeSlot[] @relation("SundayAvailability")
+}
+
+model TimeSlot {
+  id       String @id @default(uuid())
+  start    String
+  end      String
+  availabilityId   String
+  availability Availability @relation(fields: [availabilityId], references: [id], onDelete: Cascade)
+  mondayAvailabilityId   String?  // Separate fields for each day
+  tuesdayAvailabilityId  String?
+  wednesdayAvailabilityId String?
+  thursdayAvailabilityId String?
+  fridayAvailabilityId   String?
+  saturdayAvailabilityId String?
+  sundayAvailabilityId   String?
+
+  mondayAvailability   Availability? @relation(name: "MondayAvailability", fields: [mondayAvailabilityId], references: [id], onDelete: Cascade, map: "fk_monday_availability")
+  tuesdayAvailability  Availability? @relation(name: "TuesdayAvailability", fields: [tuesdayAvailabilityId], references: [id], onDelete: Cascade, map: "fk_tuesday_availability")
+  wednesdayAvailability Availability? @relation(name: "WednesdayAvailability", fields: [wednesdayAvailabilityId], references: [id], onDelete: Cascade, map: "fk_wednesday_availability")
+  thursdayAvailability Availability? @relation(name: "ThursdayAvailability", fields: [thursdayAvailabilityId], references: [id], onDelete: Cascade, map: "fk_thursday_availability")
+  fridayAvailability   Availability? @relation(name: "FridayAvailability", fields: [fridayAvailabilityId], references: [id], onDelete: Cascade, map: "fk_friday_availability")
+  saturdayAvailability Availability? @relation(name: "SaturdayAvailability", fields: [saturdayAvailabilityId], references: [id], onDelete: Cascade, map: "fk_saturday_availability")
+  sundayAvailability   Availability? @relation(name: "SundayAvailability", fields: [sundayAvailabilityId], references: [id], onDelete: Cascade, map: "fk_sunday_availability")
+}
+
+
+model Report{
+  reportId String @id @default(uuid())
+  patientId String
+  patient Patient @relation(fields: [patientId], references: [patientId])
+  doctorId String
+  doctor Doctor @relation(fields: [doctorId], references: [doctorId])
+  patientReportUrl String
+}
+
+model Appointment{
+  appointmentId String @id @default(uuid())
+  patientPersonName String
+  patientPersonPhone String
+  patientPersonEmail String
+  bookedDateTime DateTime @default(now())
+  appointmentDateTime DateTime @default(now())
+  patientId String
+  patient Patient @relation(fields: [patientId], references: [patientId])
+  doctorId String
+  doctor Doctor @relation(fields: [doctorId], references: [doctorId])
+  reasonForAppointment String?
+  timeSlot Json
+  visited Boolean?
+  location      String @default("Ask at the counter")           // e.g. "Main Hospital, Room 305"
+  duration      Int @default(60)              // in minutes
+  reasonForVisit String?
+  notes         String?     // From doctor prescription
+  status        AppointmentStatus
+  followUp      String?          // e.g. "Follow-up in 3 months"  // From doctor prescription
+  vitals        Vitals?
+  vitalsId      String?
+  prescription Prescription?
+}
+
+model Vitals {
+  id               String     @id @default(uuid())
+  bloodPressure    String?     // e.g. "135/85"
+  heartRate        Int?        // e.g. 78
+  temperature      Float?      // e.g. 98.6
+  oxygenSaturation Int?        // e.g. 98
+
+  // Link back to the Appointment
+  appointmentId    String @unique
+  appointment      Appointment @relation(fields: [appointmentId], references: [appointmentId], onDelete: Cascade)
+}
+
+// Example enum for Appointment status
+enum AppointmentStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+}
+
+
+model Payment{
+  paymentId String @id
+  paymentDateTime DateTime @default(now())
+  customerId String
+  customer Patient? @relation(fields: [customerId], references: [patientId])
+  toId String @default("00000000-0000-0000-0000-000000000000")
+  description String
+  amount Decimal
+  done Boolean
+}
+
+model Prescription{
+  prescriptionId String @id @default(uuid())
+  patientId String
+  patient Patient @relation(fields: [patientId], references: [patientId])
+  doctorId String
+  doctor Doctor @relation(fields: [doctorId], references: [doctorId])
+  appointmentId String? @unique
+  appointment Appointment? @relation(fields: [appointmentId], references: [appointmentId])
+  notes String?
+  medications Json[]
+  tests Json[]
+  prescriptionUrl String?
+  prescriptionFileType String?
+  dateTime DateTime @default(now())
+}
+
+
+// ---------------------------------------------------------------------------------------------------
+model Staff {
+  id     String     @id @default(uuid())
+  staffId String @unique
+  staff User @relation(fields: [staffId], references: [userId], onDelete: Cascade)
+  // firstName   String  @db.VarChar(50)
+  // lastName    String  @db.VarChar(50)
+  // email        String  @unique @db.VarChar(100)
+  // phone        String  @db.VarChar(15)
+  // role         String
+  department   String? @db.VarChar(100)
+  hireDate    DateTime @default(now())
+  salary       Decimal @db.Decimal(10,2)
+
+  address      Address? @relation(fields: [addressId], references: [addressId])
+  addressId   String?     // Foreign key reference to Address
+
+  shift        Shift?   @relation(fields: [shiftId], references: [shiftId])
+  shiftId     String?     // Foreign key reference to Shift
+
+  schedules    Schedule[]
+  status   String @default("Active")
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Address {
+  addressId   String     @id @default(uuid())
+  street       String  @db.VarChar(255)
+  city         String  @db.VarChar(100)
+  state        String  @db.VarChar(100)
+  postal_code  String  @db.VarChar(20)
+  country      String  @db.VarChar(100)
+
+  staff        Staff[]
+}
+
+model Shift {
+  shiftId     String     @id @default(uuid())
+  shiftIame   String  @db.VarChar(50)
+  startTime   DateTime
+  endTime     DateTime
+
+  staff        Staff[]
+  schedules Schedule[]
+}
+
+model Schedule {
+  scheduleId  Int     @id @default(autoincrement())
+  staff        Staff   @relation(fields: [staffId], references: [staffId])
+  staffId     String @unique
+  shift        Shift   @relation(fields: [shiftId], references: [shiftId])
+  shiftId     String
+  date         DateTime
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+// enum StaffRole {
+//   NURSE
+//   TECHNICIAN
+//   RECEPTIONIST
+//   ADMINISTRATOR
+//   PHARMACIST
+//   CLEANER
+//   SECURITY
+//   ACCOUNTANT
+// }
