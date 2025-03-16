@@ -9,10 +9,6 @@ import { PrismaClient } from "@prisma/client";
 
 export const authRouter = express.Router();
 
-const prisma = new PrismaClient({
-  datasourceUrl: process.env.DATABASE_URL,
-});
-
 authRouter.post("/signupCheck", async (req: Request, res: Response) => {
   try {
     const prisma = new PrismaClient({
@@ -231,8 +227,6 @@ authRouter.post("/signup", async (req: Request, res: Response) => {
   } catch (err: any) {
     const message = err.message;
     res.status(400).json({ error: message });
-  } finally {
-    await prisma.$disconnect();
   }
 });
 
@@ -374,8 +368,6 @@ authRouter.post("/logout", userAuth, async (req, res) => {
   } catch (err: any) {
     const message = err.message;
     res.status(400).json({ error: message });
-  } finally {
-    await prisma.$disconnect();
   }
 });
 
@@ -414,7 +406,17 @@ authRouter.patch("/forgotPassword", async (req: Request, res: Response) => {
   } catch (err: any) {
     const message = err.message;
     res.status(400).json({ error: message });
-  } finally {
-    await prisma.$disconnect();
   }
 });
+
+authRouter.get("/loggedCheck", userAuth, (req:Request, res:Response)=>{
+  try{
+    res.json({userId: req.body.userId})
+    return;
+  }
+  catch (err: any) {
+    const message = err.message;
+    res.status(400).json({ error: message });
+    return;
+  }
+})

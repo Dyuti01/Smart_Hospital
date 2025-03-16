@@ -1,6 +1,6 @@
 import './App.css'
 import { Landing } from './components/Landing'
-import { BrowserRouter, Route, Routes } from 'react-router'
+import { BrowserRouter, redirect, Route, Routes, useNavigate } from 'react-router'
 import { SignupForm } from './pages/Signup'
 import { SigninForm } from './pages/Signin'
 import DoctorProfile from './pages/DoctorProfilePersonal'
@@ -12,7 +12,7 @@ import OTPVerificationSignup from './pages/OTPverificationSignup'
 import AdminLogin from './pages/admin/adminLogin'
 import signupContext from './utils/signupContext'
 import signinContext from './utils/signinContext'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import OTPVerificationLogin from './pages/OTPverificationLogin'
 import UserDataContext from './utils/dataContext'
 import { ToastProvider } from './ui/patientProfile/toast'
@@ -26,6 +26,10 @@ import DoctorProfileTest from './pages/doctor-profile-test'
 import UserManagementTest from './pages/admin/UserManagementTest'
 import OTPVerificationAttendence from './pages/OTPverificationAttendence'
 import DoctorsListPage from './pages/DoctorsList'
+import { AuthContext, AuthProvider, useAuth } from './utils/AuthContext'
+import { BACKEND_URL } from './config'
+import axios from 'axios'
+import { toast } from './ui/patientProfile/use-toast'
 
 interface dataParams {
   patientId?: string;
@@ -64,13 +68,30 @@ function App() {
                       authenticateMethod:""
                     }
   })
+  const auth = useAuth();
+  const navigate = useNavigate();
+
+useEffect(()=>{
+  axios.get(`${BACKEND_URL}/api/v1/auth/loggedCheck`, {withCredentials:true}).then((res:any)=>{
+    auth.login(res.data.userId)
+   }).catch((error)=>{
+     auth.logout()
+     toast({
+      title: "Not logged in",
+      description: `${error}`,
+      variant: "destructive",
+      duration: 3000
+    })
+    navigate("/signin")
+   })
+ }, [])
 
   return (
     <>
     <UserDataContext.Provider value={{userData:genData, setUserData:setGenData}}>
     <signinContext.Provider value={{signinFormData:verifyDataLogin.signinFormData, verificationId:verifyDataLogin.verificationId, setVerifyDataLogin:setVerifyDataLogin}}>
     <signupContext.Provider value={{signupFormData:verifyDataSignup.signupFormData, verificationId:verifyDataSignup.verificationId, setVerifyDataSignup:setVerifyDataSignup}}>
-    <BrowserRouter>
+    
       {/* <Appbar/> */}
     <Routes>
       <Route path='/' element={<Landing/>}/>
@@ -98,7 +119,6 @@ function App() {
       
 
     </Routes>
-    </BrowserRouter>
     </signupContext.Provider>
     </signinContext.Provider>
     </UserDataContext.Provider>

@@ -12,14 +12,9 @@ import jwt from 'jsonwebtoken';
     const cookies = req.cookies;
     const { token } = cookies;
     
-    if (req.method==="PATCH"){
-      req.body = { updateData: req.body }
-    }
-
     if (!token){
       throw new Error("Invalid token!");
     }
-
 
     const decoded = await jwt.verify(token, process.env.JWT_SECRET||"");
 
@@ -32,7 +27,7 @@ import jwt from 'jsonwebtoken';
       throw new Error("User not present!");
     }
 
-    req.body = {userId, user, ...req.body};
+    req.body = {userId, ...req.body};
     next();
   }  
   catch(err:any){

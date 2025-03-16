@@ -14,6 +14,7 @@ import { BACKEND_URL } from "../config"
 import signinContext from "../utils/signinContext"
 import axios from "axios"
 import { toast } from "../ui/patientProfile/use-toast"
+import { AuthContext, useAuth } from "../utils/AuthContext"
 
 export default function OTPVerificationLogin() {
 	const [otp, setOtp] = useState<string[]>(new Array(6).fill(""))
@@ -24,6 +25,7 @@ export default function OTPVerificationLogin() {
 	// const [verificationCode, setVerificationCode] = useState("")
 
 	const verificationData = useContext(signinContext)
+	const auth = useAuth()
 
 	useEffect(() => {
 		// Focus first input on mount
@@ -99,9 +101,7 @@ export default function OTPVerificationLogin() {
 
 				const { message, userId }: any = response.data;
 				localStorage.setItem("userId", userId);
-				if (message !== "Invalid credentials") {
-					// add necessary details to the request
-				}
+				auth.login(userId);
 
 				setIsVerified(true)
 				setIsVerifying(false)
@@ -137,15 +137,6 @@ export default function OTPVerificationLogin() {
 		}
 	};
 
-	// const handleVerify = async () => {
-	//   setIsVerifying(true)
-	//   console.log(otp.join(""))
-	//   console.log(verificationData)
-	//   // Simulate API call
-	//   await new Promise((resolve) => setTimeout(resolve, 1500))
-	//   setIsVerified(true)
-	//   setIsVerifying(false)
-	// }
 	const recaptchaRef = useRef(null)
 
 	const sendOtp = async () => {

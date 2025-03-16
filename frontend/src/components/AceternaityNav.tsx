@@ -30,15 +30,15 @@ function Navbar({ className }: { className?: string }) {
         {/* <SidebarComponent/> */}
         <HamburgerMenu/>
         <div className="hidden md:flex gap-[20px] items-center justify-center">
-        <MenuItem setActive={setActive} active={active} item="Services">
+        {/* <MenuItem setActive={setActive} active={active} item="Services">
           <div className="flex flex-col space-y-4 text-sm">
             <HoveredLink href="/web-dev">Web Development</HoveredLink>
             <HoveredLink href="/interface-design">Interface Design</HoveredLink>
             <HoveredLink href="/seo">Search Engine Optimization</HoveredLink>
             <HoveredLink href="/branding">Branding</HoveredLink>
           </div>
-        </MenuItem>
-        <MenuItem setActive={setActive} active={active} item="Products">
+        </MenuItem> */}
+        {/* <MenuItem setActive={setActive} active={active} item="Products">
           <div className="  text-sm grid grid-cols-2 gap-10 p-4">
             <ProductItem
               title="Algochurn"
@@ -65,22 +65,22 @@ function Navbar({ className }: { className?: string }) {
               description="Respond to government RFPs, RFIs and RFQs 10x faster using AI"
             />
           </div>
-        </MenuItem>
-        <MenuItem setActive={setActive} active={active} item="Pricing">
+        </MenuItem> */}
+        {/* <MenuItem setActive={setActive} active={active} item="Pricing">
           <div className="flex flex-col space-y-4 text-sm">
             <HoveredLink href="/hobby">Hobby</HoveredLink>
             <HoveredLink href="/individual">Individual</HoveredLink>
             <HoveredLink href="/team">Team</HoveredLink>
             <HoveredLink href="/enterprise">Enterprise</HoveredLink>
           </div>
-        </MenuItem>
+        </MenuItem> */}
         <CusLink to='/' className=' h-[full] hover:text-blue-500 hover:cursor-pointer transition-all ease-in-out dark:text-white'>Home</CusLink>
         <CusLink to='/signin' className='h-[full] hover:text-blue-500 hover:cursor-pointer transition-all ease-in-out dark:text-white'>Signin</CusLink>
         <CusLink to='/signup' className='h-[full] hover:text-blue-500 hover:cursor-pointer transition-all ease-in-out dark:text-white'>Create account</CusLink>
-        <CusLink to='/doctor_profile' className='h-[full] hover:text-blue-500 hover:cursor-pointer transition-all ease-in-out dark:text-white'>DctrProfile</CusLink>
+        {/* <CusLink to='/doctor_profile' className='h-[full] hover:text-blue-500 hover:cursor-pointer transition-all ease-in-out dark:text-white'>DctrProfile</CusLink>
         <CusLink to='/doctor_profile_public' className='h-[full] hover:text-blue-500 hover:cursor-pointer transition-all ease-in-out dark:text-white'>DctrProfile</CusLink>
         <CusLink to='/patient_profile' className='h-[full] hover:text-blue-500 hover:cursor-pointer transition-all ease-in-out dark:text-white'>PtntProfile</CusLink>
-        <CusLink to='/paymentSuccess' className='h-[full] hover:text-blue-500 hover:cursor-pointer transition-all ease-in-out dark:text-white'>PaymentSuccess</CusLink>
+        <CusLink to='/paymentSuccess' className='h-[full] hover:text-blue-500 hover:cursor-pointer transition-all ease-in-out dark:text-white'>PaymentSuccess</CusLink> */}
         </div>
       </Menu>
     </div>
