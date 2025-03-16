@@ -27,7 +27,9 @@ import jwt from 'jsonwebtoken';
       throw new Error("User not present!");
     }
 
-    req.body = {userId, ...req.body};
+    const userContext = {fullName:user.firstName+" "+user.lastName, avatarUrl:user.avatarUrl};
+
+    req.body = {userId, user:userContext, ...req.body};
     next();
   }  
   catch(err:any){

@@ -69,20 +69,12 @@ function App() {
                     }
   })
   const auth = useAuth();
-  const navigate = useNavigate();
 
 useEffect(()=>{
   axios.get(`${BACKEND_URL}/api/v1/auth/loggedCheck`, {withCredentials:true}).then((res:any)=>{
-    auth.login(res.data.userId)
+    auth.login(res.data.userId, JSON.stringify(res.data.user))
    }).catch((error)=>{
-     auth.logout()
-     toast({
-      title: "Not logged in",
-      description: `${error}`,
-      variant: "destructive",
-      duration: 3000
-    })
-    navigate("/signin")
+     auth.logout();
    })
  }, [])
 

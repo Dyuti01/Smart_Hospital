@@ -6,8 +6,14 @@ import CusLink from "./CusLink";
 import { Stethoscope } from "lucide-react";
 import { SidebarComponent } from "./SidebarComponent";
 import HamburgerMenu from "./HamburgerMenu";
+import { useAuth } from "../utils/AuthContext";
+import { Button } from "../ui/patientProfile/button";
+import axios from "axios";
+import { toast } from "../ui/patientProfile/use-toast";
+import { useNavigate } from "react-router";
+import { BACKEND_URL } from "../config";
 
-export function AceternityNav({className}:{className?:string}) {
+export function AceternityNav({ className }: { className?: string }) {
   return (
     <div className={"relative w-full flex items-center justify-center" + " " + className}>
       <Navbar className="top-2" />
@@ -16,8 +22,35 @@ export function AceternityNav({className}:{className?:string}) {
 }
 
 function Navbar({ className }: { className?: string }) {
+  const auth = useAuth();
+
   const [active, setActive] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false)
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const navigate = useNavigate();
+  const handleLogout = async () => {
+    try {
+      setIsLoggingOut(true);
+      await axios.post(`${BACKEND_URL}/api/v1/auth/logout`, {}, { withCredentials: true });
+      toast({
+        title: "Logout successfully",
+        description: `You are logged out.`,
+        variant: "success",
+        duration: 5000
+      })
+      auth.logout();
+      setIsLoggingOut(false);
+      navigate('/doctorsList')
+    } catch (err: any) {
+      toast({
+        title: "Something wrong",
+        description: `Try again later. ${err}`,
+        variant: "destructive",
+        duration: 5000
+      })
+      setIsLoggingOut(false);
+    }
+  }
   return (
     <div
       className={cn("fixed inset-x-0 max-w-screen mx-[20px] mt-[10px] z-50", className)}
@@ -28,9 +61,9 @@ function Navbar({ className }: { className?: string }) {
           <span className="text-xl text-gray-900 poppins-regular dark:text-white">smartClinic</span>
         </CusLink>
         {/* <SidebarComponent/> */}
-        <HamburgerMenu/>
+        <HamburgerMenu />
         <div className="hidden md:flex gap-[20px] items-center justify-center">
-        {/* <MenuItem setActive={setActive} active={active} item="Services">
+          {/* <MenuItem setActive={setActive} active={active} item="Services">
           <div className="flex flex-col space-y-4 text-sm">
             <HoveredLink href="/web-dev">Web Development</HoveredLink>
             <HoveredLink href="/interface-design">Interface Design</HoveredLink>
@@ -38,7 +71,7 @@ function Navbar({ className }: { className?: string }) {
             <HoveredLink href="/branding">Branding</HoveredLink>
           </div>
         </MenuItem> */}
-        {/* <MenuItem setActive={setActive} active={active} item="Products">
+          {/* <MenuItem setActive={setActive} active={active} item="Products">
           <div className="  text-sm grid grid-cols-2 gap-10 p-4">
             <ProductItem
               title="Algochurn"
@@ -66,7 +99,7 @@ function Navbar({ className }: { className?: string }) {
             />
           </div>
         </MenuItem> */}
-        {/* <MenuItem setActive={setActive} active={active} item="Pricing">
+          {/* <MenuItem setActive={setActive} active={active} item="Pricing">
           <div className="flex flex-col space-y-4 text-sm">
             <HoveredLink href="/hobby">Hobby</HoveredLink>
             <HoveredLink href="/individual">Individual</HoveredLink>
@@ -74,10 +107,22 @@ function Navbar({ className }: { className?: string }) {
             <HoveredLink href="/enterprise">Enterprise</HoveredLink>
           </div>
         </MenuItem> */}
-        <CusLink to='/' className=' h-[full] hover:text-blue-500 hover:cursor-pointer transition-all ease-in-out dark:text-white'>Home</CusLink>
-        <CusLink to='/signin' className='h-[full] hover:text-blue-500 hover:cursor-pointer transition-all ease-in-out dark:text-white'>Signin</CusLink>
-        <CusLink to='/signup' className='h-[full] hover:text-blue-500 hover:cursor-pointer transition-all ease-in-out dark:text-white'>Create account</CusLink>
-        {/* <CusLink to='/doctor_profile' className='h-[full] hover:text-blue-500 hover:cursor-pointer transition-all ease-in-out dark:text-white'>DctrProfile</CusLink>
+          <CusLink to='/' className=' h-[full] hover:text-blue-500 hover:cursor-pointer transition-all ease-in-out dark:text-white'>Home</CusLink>
+          <CusLink to='/doctorsList' className=' h-[full] hover:text-blue-500 hover:cursor-pointer transition-all ease-in-out dark:text-white'>Doctors</CusLink>
+          {!auth.isAuthenticated && <CusLink to='/signin' className='h-[full] hover:text-blue-500 hover:cursor-pointer transition-all ease-in-out dark:text-white'>Signin</CusLink>}
+          {!auth.isAuthenticated && <CusLink to='/signup' className='h-[full] hover:text-blue-500 hover:cursor-pointer transition-all ease-in-out dark:text-white'>Create account</CusLink>}
+          {auth.isAuthenticated && <CusLink to='/signup' className='h-[full] hover:text-blue-500 hover:cursor-pointer transition-all ease-in-out dark:text-white'>Welcome, {auth.user?.fullName.split(' ')[0]}</CusLink>}
+          {auth.isAuthenticated && <CusLink to='/signup' className='h-[full] hover:text-blue-500 hover:cursor-pointer transition-all ease-in-out dark:text-white'>Profile</CusLink>}
+          {auth.isAuthenticated && <Button onClick={handleLogout} className='text-white bg-gradient-to-r from-cyan-700 to-teal-600'>
+            {!isLoggingOut && "Logout"}
+            {isLoggingOut &&
+              <div className="flex items-center">
+                <div className="w-4 h-4 border-2 border-gray-200 border-t-transparent rounded-full animate-spin mr-2" />
+                Logging out...
+              </div>
+            }
+          </Button>}
+          {/* <CusLink to='/doctor_profile' className='h-[full] hover:text-blue-500 hover:cursor-pointer transition-all ease-in-out dark:text-white'>DctrProfile</CusLink>
         <CusLink to='/doctor_profile_public' className='h-[full] hover:text-blue-500 hover:cursor-pointer transition-all ease-in-out dark:text-white'>DctrProfile</CusLink>
         <CusLink to='/patient_profile' className='h-[full] hover:text-blue-500 hover:cursor-pointer transition-all ease-in-out dark:text-white'>PtntProfile</CusLink>
         <CusLink to='/paymentSuccess' className='h-[full] hover:text-blue-500 hover:cursor-pointer transition-all ease-in-out dark:text-white'>PaymentSuccess</CusLink> */}

@@ -314,7 +314,11 @@ authRouter.post("/login", async (req, res) => {
           sameSite: "none",
         });
 
-        res.json({ message: "Successfully logged in!", userId: user.userId });
+        res.json({ message: "Successfully logged in!", userId: user.userId, 
+          user:{
+            fullName:user.firstName+" "+user.lastName,
+            avatarUrl: user.avatarUrl
+        } });
         return;
       } else {
         // res.clearCookie("token", {path: "/login"});
@@ -350,7 +354,11 @@ authRouter.post("/login", async (req, res) => {
         sameSite: "none",
       });
 
-      res.json({ message: "Successfully logged in!", userId: user.userId });
+      res.json({ message: "Successfully logged in!", userId: user.userId, 
+        user:{
+          fullName:user.firstName+" "+user.lastName,
+          avatarUrl: user.avatarUrl
+      } });
       return;
     }
   } catch (err: any) {
@@ -411,7 +419,7 @@ authRouter.patch("/forgotPassword", async (req: Request, res: Response) => {
 
 authRouter.get("/loggedCheck", userAuth, (req:Request, res:Response)=>{
   try{
-    res.json({userId: req.body.userId})
+    res.json({userId: req.body.userId, user:req.body.user})
     return;
   }
   catch (err: any) {

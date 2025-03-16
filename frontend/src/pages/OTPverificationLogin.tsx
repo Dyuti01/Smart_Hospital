@@ -99,9 +99,9 @@ export default function OTPVerificationLogin() {
 				const response = await axios.post(`${BACKEND_URL}/api/v1/auth/login`, phoneSigninData, { withCredentials: true })
 				console.log("from Login", response.data)
 
-				const { message, userId }: any = response.data;
-				localStorage.setItem("userId", userId);
-				auth.login(userId);
+				const { message, userId, user }: any = response.data;
+				// localStorage.setItem("userId", userId);
+				auth.login(userId, JSON.stringify(user));
 
 				setIsVerified(true)
 				setIsVerifying(false)

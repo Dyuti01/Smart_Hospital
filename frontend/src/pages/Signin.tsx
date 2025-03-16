@@ -16,6 +16,7 @@ import { Button } from "../ui/patientProfile/button";
 import firebase from "../firebase";
 import signinContext from "../utils/signinContext";
 import { toast } from "../ui/patientProfile/use-toast";
+import { useAuth } from "../utils/AuthContext";
 
 export function SigninForm() {
   const [signinFormData, setSigninFormData] = useState({
@@ -34,7 +35,7 @@ export function SigninForm() {
   const recaptchaRef = useRef(null)
   const verificationData = useContext(signinContext)
   const navigate = useNavigate()
-
+  const auth = useAuth();
   const sendOtp = async () => {
     try {
       if (recaptchaRef.current) {
@@ -72,8 +73,11 @@ export function SigninForm() {
         console.log(signinFormData);
         const response = await axios.post(`${BACKEND_URL}/api/v1/auth/login`, signinFormData, { withCredentials: true })
         console.log(response.data)
-        const { message, userId }: any = response.data;
-        localStorage.setItem("userId", userId)
+        const { message, userId, user }: any = response.data;
+        // localStorage.setItem("userId", userId)
+
+				auth.login(userId, JSON.stringify(user));
+
         if (message !== "Invalid credentials") {
           // add necessary details to the request
         }
