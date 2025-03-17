@@ -72,6 +72,7 @@ function App() {
 
 useEffect(()=>{
   axios.get(`${BACKEND_URL}/api/v1/auth/loggedCheck`, {withCredentials:true}).then((res:any)=>{
+    console.log("Global:", res.data);
     auth.login(res.data.userId, JSON.stringify(res.data.user))
    }).catch((error)=>{
      auth.logout();

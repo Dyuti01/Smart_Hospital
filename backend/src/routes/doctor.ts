@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import express, { application, Request, Response } from "express";
+import { userAuth } from "../middlewares/auth";
 const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
 const streamifier = require("streamifier");
@@ -18,6 +19,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 doctorRouter.get(
   "/getDoctorData/:doctorId",
+  userAuth,
   async (req: Request, res: Response) => {
     try {
       const prisma = new PrismaClient({
@@ -130,6 +132,7 @@ doctorRouter.get(
 
 doctorRouter.patch(
   "/editSchedule/:doctorId",
+  userAuth,
   async (req: Request, res: Response) => {
     try {
       const prisma = new PrismaClient({
@@ -179,6 +182,7 @@ doctorRouter.patch(
 
 doctorRouter.patch(
   "/edit/:doctorId",
+  userAuth,
   upload.single("avatarUrl"),
   async (req: any, res) => {
     try {
@@ -384,6 +388,7 @@ doctorRouter.patch(
 
 doctorRouter.get(
   "/getAllData/:doctorId",
+  userAuth,
   async (req: Request, res: Response) => {
     try {
       const prisma = new PrismaClient({
@@ -482,6 +487,7 @@ doctorRouter.get(
 
 doctorRouter.patch(
   "/markAttendence/:appointmentId",
+  userAuth,
   async (req: Request, res: Response) => {
     try {
       const prisma = new PrismaClient({
@@ -513,6 +519,7 @@ doctorRouter.patch(
 );
 doctorRouter.patch(
   "/updateNotes/:appointmentId",
+  userAuth,
   async (req: Request, res: Response) => {
     try {
       const prisma = new PrismaClient({
@@ -544,6 +551,7 @@ doctorRouter.patch(
 
 doctorRouter.patch(
   "/createPrescription/:appointmentId",
+  userAuth,
   upload.single("prescriptionUrl"),
   async (req: Request, res: Response) => {
     try {

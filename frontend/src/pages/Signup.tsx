@@ -162,8 +162,8 @@ export function SignupForm() {
               <select onChange={(e) => setSignupFormData({ ...signupFormData, userType: e.target.value })} id="countries" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" defaultValue={"Choose"}>
                 <option defaultValue="Choose">Choose</option>
                 <option value="Patient">Patient</option>
-                <option value="Doctor">Doctor</option>
-                <option value="Others">Other Staff</option>
+                {/* <option value="Doctor">Doctor</option>
+                <option value="Others">Other Staff</option> */}
               </select>
             </LabelInputContainer>
             <LabelInputContainer className="mb-4">
@@ -272,13 +272,13 @@ export function SignupForm() {
           <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent mb-3 h-[1px] w-full" />
 
           {/* <div className="flex flex-col space-y-4"> */}
-          <div className="flex flex-wrap flex-row justify-center items-center gap-4 pb-3">
+          {/* <div className="flex flex-wrap flex-row justify-center items-center gap-4 pb-3">
             <button
               className=" relative group/btn flex space-x-2 items-center justify-start px-4 text-black rounded-md h-10 font-medium shadow-input bg-gray-50 dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
               type="submit"
             >
-              {/* <IconBrandGoogle className="h-4 w-4 text-neutral-800 dark:text-neutral-300" /> */}
-              <img
+              // {/* <IconBrandGoogle className="h-4 w-4 text-neutral-800 dark:text-neutral-300" /> */}
+              {/* <img
                 className="max-w-[20px]"
                 src="https://ucarecdn.com/8f25a2ba-bdcf-4ff1-b596-088f330416ef/"
                 alt="Google"
@@ -288,7 +288,7 @@ export function SignupForm() {
               </span>
               <BottomGradient />
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
 

@@ -271,7 +271,7 @@ const prescriptionsData = [
     fileUrl: "/sample-prescription.jpg", // In a real app, this would be a real image URL
   },
 ]
-const payments = [
+const paymentsData = [
   {
     id: "PAY001",
     date: "2024-03-10",
@@ -349,6 +349,7 @@ export default function PatientProfileV0() {
   const navigate = useNavigate()
   const [appointments, setAppointments] = useState(appointmentsData)
   const [prescriptions, setPrescriptions] = useState(prescriptionsData);
+  const [payments, setPayments] = useState(paymentsData)
   const [isEditing, setIsEditing] = useState(false)
   const [isEdited, setIsEdited] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -359,7 +360,7 @@ export default function PatientProfileV0() {
 
   const patientData = UseGetUserData(setPatient, setIsProfileLoading, "Patient", setEditFormData);
 
-  const allAppointements = UseGetAllDataPatient(setAppointments, appointments, setPrescriptions, prescriptions, setIsAppointmentsLoading,  "Patient")
+  const allAppointements = UseGetAllDataPatient(setAppointments, appointments, setPrescriptions, prescriptions, setPayments, payments, setIsAppointmentsLoading,  "Patient")
 
 
   if (isProfileLoading || isAppointmentsLoading) {
@@ -539,7 +540,7 @@ export default function PatientProfileV0() {
     // <BeamBackground>
     <div className="container py-6 px-[100px] max-w-full bg-gradient-to-r from-cyan-600 to-teal-600">
       <AceternityNav />
-      <div className="flex flex-col md:flex-row gap-6 mb-6 mt-20">
+      <div className="flex flex-col md:flex-row gap-6 mb-6 mt-24">
         <div className="w-full md:w-1/3">
           <Card className="bg-white">
             <CardHeader className="pb-2">
@@ -1343,7 +1344,7 @@ export default function PatientProfileV0() {
                             >
                               <td className="p-4 align-middle">{format(new Date(payment.date), "MMM d, yyyy")}</td>
                               <td className="p-4 align-middle">{payment.description}</td>
-                              <td className="p-4 align-middle">${payment.amount.toFixed(2)}</td>
+                              <td className="p-4 align-middle">₹{payment.amount.toFixed(2)}</td>
                               <td className="p-4 align-middle">
                                 <Badge variant="outline" className={getStatusColor(payment.status)}>
                                   {payment.status}
@@ -1357,7 +1358,7 @@ export default function PatientProfileV0() {
                   </div>
                 </CardContent>
                 <CardFooter>
-                  <Button className="w-full">Make a Payment</Button>
+                  {/* <Button className="w-full">Make a Payment</Button> */}
                 </CardFooter>
               </Card>
             </TabsContent>

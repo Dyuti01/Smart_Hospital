@@ -6,7 +6,8 @@ import { createContext, useContext, useState, useEffect } from "react"
 interface User {
   userId: string,
   fullName:string,
-  avatarUrl:string
+  avatarUrl:string,
+  role:string
 }
 
 interface AuthContextType {
@@ -32,18 +33,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Check if user is already logged in
   useEffect(() => {
     const userId = localStorage.getItem("userId");
-    const blankUser = JSON.stringify({fullName:"", avatarUrl:""});
+    const blankUser = JSON.stringify({fullName:"", avatarUrl:"", role:""});
     const user = JSON.parse(localStorage.getItem("user")||blankUser)
     if (userId && user) {
-      setUser({userId:userId, fullName: user.fullName||"", avatarUrl:user.avatarUrl})
+      setUser({userId:userId, fullName: user.fullName||"", avatarUrl:user.avatarUrl, role:user.role})
       setIsAuthenticated(true)
     }
   }, [])
 
-  const login = (userId:string, user:string) => {      
-      setIsAuthenticated(true)
-      localStorage.setItem("user",user);
+  const login = (userId:string, userString:string) => {
+      localStorage.setItem("user",userString);
       localStorage.setItem("userId", userId)
+
+      const user = JSON.parse(userString);
+      setUser({userId:userId, fullName: user.fullName||"", avatarUrl:user.avatarUrl, role:user.role})   
+      setIsAuthenticated(true)
+      
       return true;
   }
 
@@ -51,6 +56,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(null)
     setIsAuthenticated(false)
     localStorage.removeItem("userId")
+    localStorage.removeItem("user")
   }
   
   return <AuthContext.Provider value={{ user, isAuthenticated, login, logout }}>{children}</AuthContext.Provider>

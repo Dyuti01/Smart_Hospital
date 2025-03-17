@@ -3,13 +3,14 @@ import Razorpay from "razorpay";
 import express, { NextFunction, Request, Response } from "express";
 import { validatePaymentVerification, } from "razorpay/dist/utils/razorpay-utils";
 import { makeAppointment } from "./patient";
+import { userAuth } from "../middlewares/auth";
 
 const app = express();
 
 export const paymentRouter = express.Router();
 
 // export const initiate = async (amount:any, to_user:string, paymentform:any) => {
-paymentRouter.post("/initiatePayment", async (req: Request, res: Response) => {
+paymentRouter.post("/initiatePayment", userAuth, async (req: Request, res: Response) => {
   try {
     const prisma = new PrismaClient({
       datasourceUrl: process.env.DATABASE_URL,
@@ -71,7 +72,7 @@ paymentRouter.post("/initiatePayment", async (req: Request, res: Response) => {
 });
 
 // export const POST = async (req:Request)=>{
-paymentRouter.post("/verifyPayment", async (req: Request, res: Response) => {
+paymentRouter.post("/verifyPayment", userAuth, async (req: Request, res: Response) => {
   try {
     const prisma = new PrismaClient({
       datasourceUrl: process.env.DATABASE_URL,
@@ -105,7 +106,7 @@ paymentRouter.post("/verifyPayment", async (req: Request, res: Response) => {
     if (pmt) {
       const update = await prisma.payment.update({
         where: { paymentId: body.razorpay_order_id },
-        data: { done: true },
+        data: { paymentId:body.razorpay_payment_id, done: true },
       });
 
       // make the appointment

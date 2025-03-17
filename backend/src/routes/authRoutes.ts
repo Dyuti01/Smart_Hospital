@@ -23,14 +23,12 @@ authRouter.post("/signupCheck", async (req: Request, res: Response) => {
         },
       });
       if (user) {
-        res
-          .status(409)
-          .json({ error: "User with this email already exists!" });
+        res.status(409).json({ error: "User with this email already exists!" });
         return;
       }
-      res.json({message:"Go to go for signup."});
+      res.json({ message: "Go to go for signup." });
       return;
-    }else {
+    } else {
       const user = await prisma.user.findUnique({
         where: {
           phone: phone,
@@ -43,7 +41,7 @@ authRouter.post("/signupCheck", async (req: Request, res: Response) => {
         return;
       }
 
-      res.json({message:"Go to go for signup."});
+      res.json({ message: "Go to go for signup." });
       return;
     }
   } catch (err: any) {
@@ -51,7 +49,6 @@ authRouter.post("/signupCheck", async (req: Request, res: Response) => {
     res.status(400).json({ error: message });
   }
 });
-
 
 authRouter.post("/signup", async (req: Request, res: Response) => {
   try {
@@ -92,6 +89,7 @@ authRouter.post("/signup", async (req: Request, res: Response) => {
         },
       });
       if (already) {
+        await prisma.$disconnect();
         res.status(409).json({ message: "Phone number already exists!" });
         return;
       }
@@ -222,6 +220,7 @@ authRouter.post("/signup", async (req: Request, res: Response) => {
       //   });
       // }
     }
+    await prisma.$disconnect();
     res.json({ status: "User created" });
     return;
   } catch (err: any) {
@@ -250,9 +249,9 @@ authRouter.post("/loginCheck", async (req: Request, res: Response) => {
           .json({ error: "Invalid credentials! No such user exists." });
         return;
       }
-      res.json({message:"Go to go for login."});
+      res.json({ message: "Go to go for login." });
       return;
-    }else {
+    } else {
       const user = await prisma.user.findUnique({
         where: {
           phone: phone,
@@ -265,7 +264,8 @@ authRouter.post("/loginCheck", async (req: Request, res: Response) => {
           .json({ error: "Invalid credentials! No such user exists." });
         return;
       }
-      res.json({message:"Go to go for login."});
+      await prisma.$disconnect();
+      res.json({ message: "Go to go for login." });
       return;
     }
   } catch (err: any) {
@@ -301,24 +301,28 @@ authRouter.post("/login", async (req, res) => {
       if (isPasswordValid) {
         const secret: string = process.env.JWT_SECRET || "";
         const token = await jwt.sign({ userId: user.userId }, secret, {
-          expiresIn: "2 days",
+          expiresIn: "1h",
         });
 
         // Add the token to the cookie and send the response back to the user
         // Better use maxAge rather than milliseconds in expires
         res.cookie("token", token, {
-          maxAge: 24 * 2 * 3600000,
+          maxAge: 24 * 3600000,
           path: "/",
           httpOnly: true,
           secure: true,
           sameSite: "none",
         });
 
-        res.json({ message: "Successfully logged in!", userId: user.userId, 
-          user:{
-            fullName:user.firstName+" "+user.lastName,
-            avatarUrl: user.avatarUrl
-        } });
+        res.json({
+          message: "Successfully logged in!",
+          userId: user.userId,
+          user: {
+            fullName: user.firstName + " " + user.lastName,
+            avatarUrl: user.avatarUrl,
+            role: user.userType,
+          },
+        });
         return;
       } else {
         // res.clearCookie("token", {path: "/login"});
@@ -354,11 +358,16 @@ authRouter.post("/login", async (req, res) => {
         sameSite: "none",
       });
 
-      res.json({ message: "Successfully logged in!", userId: user.userId, 
-        user:{
-          fullName:user.firstName+" "+user.lastName,
-          avatarUrl: user.avatarUrl
-      } });
+      res.json({
+        message: "Successfully logged in!",
+        userId: user.userId,
+        user: {
+          fullName: user.firstName + " " + user.lastName,
+          avatarUrl: user.avatarUrl,
+          role: user.userType,
+        },
+      });
+      await prisma.$disconnect();
       return;
     }
   } catch (err: any) {
@@ -370,9 +379,15 @@ authRouter.post("/login", async (req, res) => {
 authRouter.post("/logout", userAuth, async (req, res) => {
   try {
     // g(req.originalUrl);
-    res
-      .clearCookie("token", { path: "/" })
-      .json({ message: "Logout successfully!" });
+
+    res.clearCookie("token", {
+      path: "/",
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    });
+    res.json({ message: "Logout successfully!" });
+    return;
   } catch (err: any) {
     const message = err.message;
     res.status(400).json({ error: message });
@@ -417,14 +432,13 @@ authRouter.patch("/forgotPassword", async (req: Request, res: Response) => {
   }
 });
 
-authRouter.get("/loggedCheck", userAuth, (req:Request, res:Response)=>{
-  try{
-    res.json({userId: req.body.userId, user:req.body.user})
+authRouter.get("/loggedCheck", userAuth, (req: Request, res: Response) => {
+  try {
+    res.json({ userId: req.body.userId, user: req.body.user });
     return;
-  }
-  catch (err: any) {
+  } catch (err: any) {
     const message = err.message;
     res.status(400).json({ error: message });
     return;
   }
-})
+});

@@ -11,7 +11,10 @@ import { Label } from "../../ui/patientProfile/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../ui/patientProfile/card"
 import { BeamBackground } from "../../components/BeamsBackground"
 import { useToast } from "../../ui/patientProfile/use-toast"
-import { Eye, EyeOff, Hospital } from "lucide-react"
+import { Eye, EyeOff, Hospital, Stethoscope } from "lucide-react"
+import CusLink from "../../components/CusLink"
+import { BACKEND_URL } from "../../config"
+import axios from "axios"
 
 const LoginPage = () => {
   const [email, setEmail] = useState("")
@@ -21,31 +24,33 @@ const LoginPage = () => {
   const { login } = useAuth()
   const navigate = useNavigate()
   const { toast } = useToast()
+  const auth = useAuth()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
 
     try {
-      const success = await login(email, password)
+      const response = await axios.post(`${BACKEND_URL}/api/v1/auth/login`, 
+      {userType: "Admin",
+        email: email,
+        password: password,
+        authenticateMethod: "email",}, { withCredentials: true })
+      console.log(response.data)
+      const { message, userId, user }: any = response.data;
+      // localStorage.setItem("userId", userId)
 
-      if (success) {
+        auth.login(userId, JSON.stringify(user));
         toast({
           title: "Login successful",
           description: "Welcome to the Hospital Admin Dashboard",
         })
-        navigate("/")
-      } else {
-        toast({
-          title: "Login failed",
-          description: "Invalid email or password. Try admin@hospital.com / admin123",
-          variant: "destructive",
-        })
-      }
+        navigate("/admin/userManage")
+
     } catch (error) {
       toast({
         title: "Login error",
-        description: "An unexpected error occurred",
+        description: "An unexpected error occurred. "+error,
         variant: "destructive",
       })
     } finally {
@@ -54,14 +59,18 @@ const LoginPage = () => {
   }
 
   return (
-    <BeamBackground>
-      <div className="min-h-screen flex items-center justify-center p-4">
+    // <BeamBackground>
+      <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-r from-cyan-600 to-teal-600">
         <Card className="w-full max-w-md bg-background/95 backdrop-blur-sm">
           <CardHeader className="space-y-1">
             <div className="flex justify-center mb-4">
-              <div className="h-12 w-12 rounded-full bg-primary flex items-center justify-center">
+              {/* <div className="h-12 w-12 rounded-full bg-primary flex items-center justify-center">
                 <Hospital className="h-6 w-6 text-primary-foreground" />
-              </div>
+              </div> */}
+              <CusLink to='/' className="flex gap-[5px] items-center justify-center text-white hover:cursor-pointer" >
+                <Stethoscope className="text-cyan-600" />
+                <span className="text-xl text-gray-900 poppins-regular dark:text-white">smartClinic</span>
+              </CusLink>
             </div>
             <CardTitle className="text-2xl font-bold text-center">Hospital Admin Portal</CardTitle>
             <CardDescription className="text-center">
@@ -104,19 +113,19 @@ const LoginPage = () => {
                   </Button>
                 </div>
               </div>
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button type="submit" className="w-full bg-gradient-to-r from-cyan-600 to-teal-600" disabled={isLoading}>
                 {isLoading ? "Signing in..." : "Sign In"}
               </Button>
             </form>
           </CardContent>
           <CardFooter className="flex flex-col">
-            <p className="text-xs text-center text-muted-foreground mt-4">
+            {/* <p className="text-xs text-center text-muted-foreground mt-4">
               Demo credentials: admin@hospital.com / admin123
-            </p>
+            </p> */}
           </CardFooter>
         </Card>
       </div>
-    </BeamBackground>
+    // {/* </BeamBackground> */}
   )
 }
 

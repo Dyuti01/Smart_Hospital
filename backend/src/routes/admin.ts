@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import express, { Request, Response } from "express";
 import bcrypt from "bcrypt";
+import { userAuth } from "../middlewares/auth";
 
 const app = express();
 
@@ -125,7 +126,7 @@ adminRouter.post("/addNewUser", async (req: Request, res: Response) => {
   }
 });
 
-adminRouter.get("/getAllStaffData", async (req:Request, res:Response)=>{
+adminRouter.get("/getAllStaffData", userAuth, async (req:Request, res:Response)=>{
   try{
 	const prisma = new PrismaClient({
 		datasourceUrl: process.env.DATABASE_URL,

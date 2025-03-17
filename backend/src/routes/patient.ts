@@ -44,6 +44,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 patientRouter.get(
   "/getPatientData/:patientId",
+  userAuth,
   async (req: Request, res: Response) => {
     try {
       const prisma = new PrismaClient({
@@ -108,6 +109,7 @@ patientRouter.get(
 // Update user info
 patientRouter.patch(
   "/edit/:patientId",
+  userAuth,
   upload.single("avatarUrl"),
   async (req: any, res) => {
     try {
@@ -305,7 +307,7 @@ patientRouter.patch(
   }
 );
 
-patientRouter.post("/isPaymentDone", async (req: Request, res: Response) => {
+patientRouter.post("/isPaymentDone", userAuth, async (req: Request, res: Response) => {
   try {
     const prisma = new PrismaClient({
       datasourceUrl: process.env.DATABASE_URL,
@@ -361,6 +363,7 @@ export const makeAppointment = async (appointmentDetails: any) => {
 
 patientRouter.get(
   "/getAllData/:patientId",
+  userAuth,
   async (req: Request, res: Response) => {
     try {
       const prisma = new PrismaClient({
@@ -380,8 +383,11 @@ patientRouter.get(
         }
       });
 
+      const payments = await prisma.payment.findMany({where:{customerId:patientId}})
+
       const appointmentsData:any = [];
       const prescriptions:any = [];
+      const patientPayments:any = [];
 
       appointments.map((appointment) => {
         const appointmentSafeData = {
@@ -438,7 +444,19 @@ patientRouter.get(
       }
       });
 
-      res.json({ appointments: appointmentsData, prescriptions:prescriptions });
+      payments.map((payment)=>{
+        const paymentData = {
+          id: payment.paymentId,
+          date: payment.paymentDateTime,
+          amount: Number(payment.amount),
+          description: payment.description,
+          status: payment.done?"completed":"cancelled",
+        }
+
+        patientPayments.push(paymentData)
+      })
+
+      res.json({ appointments: appointmentsData, prescriptions:prescriptions, payments:patientPayments });
       await prisma.$disconnect();
       return;
     } catch (err: any) {

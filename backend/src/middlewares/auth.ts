@@ -27,9 +27,10 @@ import jwt from 'jsonwebtoken';
       throw new Error("User not present!");
     }
 
-    const userContext = {fullName:user.firstName+" "+user.lastName, avatarUrl:user.avatarUrl};
+    const userContext = {fullName:user.firstName+" "+user.lastName, avatarUrl:user.avatarUrl, role:user.userType};
 
     req.body = {userId, user:userContext, ...req.body};
+    await prisma.$disconnect();
     next();
   }  
   catch(err:any){

@@ -21,7 +21,7 @@ export const UseGetUserData = (
         .get(
           `${BACKEND_URL}/api/v1/${role.split("Public")[0].toLowerCase()}/get${
             role.split("Public")[0]
-          }Data/${role === "DoctorPublic" ? userId : id}`
+          }Data/${role === "DoctorPublic" ? userId : id}`, {withCredentials:true}
         )
         .then((res: any) => {
           setUserData(res.data.userDetails);
@@ -40,7 +40,7 @@ export const UseGetUserData = (
         .catch((err: any) =>{
           toast({
             title: "Something wrong",
-            description: `Please try again later. ${err}`,
+            description: `${err.response.data.error}`,
             variant: "destructive",
             duration: 5000,
           });
@@ -51,7 +51,7 @@ export const UseGetUserData = (
   } catch (err: any) {
     toast({
       title: "Something wrong",
-      description: `Please try again later. ${err}`,
+      description: `${err.response.data.error}`,
       variant: "destructive",
       duration: 5000,
     });
@@ -69,7 +69,7 @@ export const UseGetAllStaffData = (
   try {
     useEffect(() => {
       axios
-        .get(`${BACKEND_URL}/api/v1/admin/getAllStaffData`)
+        .get(`${BACKEND_URL}/api/v1/admin/getAllStaffData`, {withCredentials:true})
         .then((res: any) => {
           const newStaff = res.data.allStaff;
 
@@ -84,9 +84,10 @@ export const UseGetAllStaffData = (
           console.log("safeData: ", uniqueUsers);
           setIsLoading(false);
         }).catch((err: any) =>{
+          console.log(err)
           toast({
             title: "Something wrong",
-            description: `Please try again later. ${err}`,
+            description: `${err.response.data.error}`,
             variant: "destructive",
             duration: 5000,
           });
@@ -98,7 +99,7 @@ export const UseGetAllStaffData = (
   } catch (err: any) {
     toast({
       title: "Something wrong",
-      description: `Please try again later. ${err}`,
+      description: `${err.response.data.error}`,
       variant: "destructive",
       duration: 5000,
     });
@@ -111,6 +112,8 @@ export const UseGetAllDataPatient = (
   appointments: any,
   setPrescriptions: any,
   prescriptions: any,
+  setPayments:any,
+  payments:any,
   setIsLoading: any,
   role: string
 ) => {
@@ -120,10 +123,11 @@ export const UseGetAllDataPatient = (
   try {
     useEffect(() => {
       axios
-        .get(`${BACKEND_URL}/api/v1/${role.toLowerCase()}/getAllData/${id}`)
+        .get(`${BACKEND_URL}/api/v1/${role.toLowerCase()}/getAllData/${id}`, {withCredentials:true})
         .then((res: any) => {
           const newAppointmetns = res.data.appointments;
           const newPrescriptions = res.data.prescriptions;
+          const newPayments = res.data.payments;
 
           const uniqueAppointments = Array.from(
             new Map(
@@ -142,6 +146,15 @@ export const UseGetAllDataPatient = (
               ])
             ).values()
           );
+          const uniquePayments = Array.from(
+            new Map(
+              [...payments, ...newPayments].map((payment) => [
+                payment.id,
+                payment,
+              ])
+            ).values()
+          );
+          setPayments(uniquePayments);
           setPrescriptions(uniquePrescriptions);
           setAllAppointments(uniqueAppointments); // Update local state
           setAppointments(uniqueAppointments); // Ensure no duplicates in the global users array
@@ -151,7 +164,7 @@ export const UseGetAllDataPatient = (
         }).catch((err: any) =>{
           toast({
             title: "Something wrong",
-            description: `Please try again later. ${err}`,
+            description: `${err.response.data.error}`,
             variant: "destructive",
             duration: 5000,
           });
@@ -163,7 +176,7 @@ export const UseGetAllDataPatient = (
   } catch (err: any) {
     toast({
       title: "Something wrong",
-      description: `Please try again later. ${err}`,
+      description: `${err.response.data.error}`,
       variant: "destructive",
       duration: 5000,
     });
@@ -185,7 +198,7 @@ export const UseGetAllDataDoctor = (
   try {
     useEffect(() => {
       axios
-        .get(`${BACKEND_URL}/api/v1/${role.toLowerCase()}/getAllData/${id}`)
+        .get(`${BACKEND_URL}/api/v1/${role.toLowerCase()}/getAllData/${id}`, {withCredentials:true})
         .then((res: any) => {
           const newAppointmetns = res.data.appointments;
           const newPatients = res.data.patients;
@@ -216,7 +229,7 @@ export const UseGetAllDataDoctor = (
         }).catch((err: any) =>{
           toast({
             title: "Something wrong",
-            description: `Please try again later. ${err}`,
+            description: `${err.response.data.error}`,
             variant: "destructive",
             duration: 5000,
           });
@@ -228,7 +241,7 @@ export const UseGetAllDataDoctor = (
   } catch (err: any) {
     toast({
       title: "Something wrong",
-      description: `Please try again later. ${err}`,
+      description: `${err.response.data.error}`,
       variant: "destructive",
       duration: 5000,
     });
@@ -245,7 +258,7 @@ export const UseGetAllDoctorsList = (
   try {
     useEffect(() => {
       axios
-        .get(`${BACKEND_URL}/api/v1/doctor/getAllDoctors`)
+        .get(`${BACKEND_URL}/api/v1/doctor/getAllDoctors`, {withCredentials:true})
         .then((res: any) => {
           const newDoctors = res.data.doctors;
           const uniqueDoctors = Array.from(
@@ -258,7 +271,7 @@ export const UseGetAllDoctorsList = (
         }).catch((err: any) =>{
           toast({
             title: "Something wrong",
-            description: `Please try again later. ${err}`,
+            description: `${err.response.data.error}`,
             variant: "destructive",
             duration: 5000,
           });
@@ -268,10 +281,11 @@ export const UseGetAllDoctorsList = (
   } catch (err: any) {
     toast({
       title: "Something wrong",
-      description: `Please try again later. ${err}`,
+      description: `${err.response.data.error}`,
       variant: "destructive",
       duration: 5000,
     });
     navigate("/signin")
   }
 };
+
