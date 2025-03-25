@@ -86,18 +86,13 @@ export default function OTPVerificationLogin() {
 		try {
 			setIsVerifying(true)
 			const verificationCode = otp.join("").toString();
-			console.log(verificationCode)
-			console.log(verificationData)
 			const credentials = firebase.auth.PhoneAuthProvider.credential(verificationData.verificationId, verificationCode);
-			console.log(credentials)
 			firebase.auth().signInWithCredential(credentials).then(async (userCrdential) => {
-				console.log("User logged in: " + userCrdential.user?.toJSON())
 				const phoneSigninData = {
 					userType: verificationData.signinFormData.userType,
 					phone: verificationData.signinFormData.phone,
 				}
 				const response = await axios.post(`${BACKEND_URL}/api/v1/auth/login`, phoneSigninData, { withCredentials: true })
-				console.log("from Login", response.data)
 
 				const { message, userId, user }: any = response.data;
 				// localStorage.setItem("userId", userId);

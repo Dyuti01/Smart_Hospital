@@ -5,8 +5,19 @@ import cookieParser from "cookie-parser";
 import { paymentRouter } from "./routes/payment";
 import { adminRouter } from "./routes/admin";
 import { doctorRouter } from "./routes/doctor";
+const fs = require("fs");
+const path = require("path");
+const https = require("https");
 const cors = require("cors")
 const bodyParser = require("body-parser")
+
+const ip = "192.168.237.1";
+const port = 7778;
+
+const options = {
+  key: fs.readFileSync("server.key"),
+  cert: fs.readFileSync("server.cert"),
+};
 
 const app = express();
 
@@ -27,6 +38,10 @@ app.use("/api/v1/doctor", doctorRouter);
 app.use("/api/v1/patient", patientRouter);
 app.use("/api/v1/razorpay", paymentRouter);
 
-app.listen(3000, ()=>{
-  console.log("Server started...")
-})
+// app.listen(7777, ()=>{
+//   console.log("Server started...")
+// })
+
+https.createServer(options, app).listen(port, ip,  () => {
+  console.log(`HTTPS Server running on https://${ip}:${port}`);
+});

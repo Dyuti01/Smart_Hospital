@@ -204,6 +204,15 @@ model Payment{
   description String
   amount Decimal
   done Boolean
+  status PaymentStatus
+  appointmentDetails Json?
+}
+
+enum PaymentStatus{
+  SUCCESS
+  PENDING
+  INITIATED
+  FAILED
 }
 
 model Prescription{

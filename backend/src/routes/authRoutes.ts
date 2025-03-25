@@ -14,7 +14,7 @@ authRouter.post("/signupCheck", async (req: Request, res: Response) => {
     const prisma = new PrismaClient({
       datasourceUrl: process.env.DATABASE_URL,
     });
-    console.log(req.body);
+
     const { email, password, phone, userType } = req.body;
     if (!phone) {
       const user = await prisma.user.findUnique({
@@ -55,12 +55,12 @@ authRouter.post("/signup", async (req: Request, res: Response) => {
     //   const prisma:PrismaClient<{
     //     datasourceUrl: string | undefined;
     // }, never, DefaultArgs> = prismaClient(req, res);
-    console.log(req.body);
+
     const prisma = new PrismaClient({
       datasourceUrl: process.env.DATABASE_URL,
     });
     const body = req.body;
-    console.log(body);
+
     const { success, error } = signUpInput.safeParse(body);
     if (!success) {
       throw new Error(error.message);
@@ -234,7 +234,7 @@ authRouter.post("/loginCheck", async (req: Request, res: Response) => {
     const prisma = new PrismaClient({
       datasourceUrl: process.env.DATABASE_URL,
     });
-    console.log(req.body);
+
     const { email, password, phone, userType } = req.body;
     if (!phone) {
       const user = await prisma.user.findUnique({
@@ -279,7 +279,7 @@ authRouter.post("/login", async (req, res) => {
     const prisma = new PrismaClient({
       datasourceUrl: process.env.DATABASE_URL,
     });
-    console.log(req.body);
+
     const { email, password, phone, userType } = req.body;
     if (!phone) {
       const user = await prisma.user.findUnique({

@@ -19,29 +19,6 @@ cloudinary.config({
 
 const upload = multer({ storage: multer.memoryStorage() });
 
-// patientRouter.post("/makeAppointment", async (req:Request, res:Response)=>{
-//   try{
-//       const prisma = new PrismaClient({
-//       datasourceUrl: process.env.DATABASE_URL,
-//     });
-//     console.log(req.body)
-//   const appointmentDetails:AppointmentDetails = req.body;
-//     // console.log(doctorId)
-
-//     // make the payment
-
-//   await prisma.appointment.create({
-//   data:{
-//     patientId:"f55f1ec0-5793-4f4c-8fd6-cb042dd22fc4", doctorId:"8587cc89-76ac-4e31-97aa-f1da23769d82",
-//     appointmentDateTime:appointmentDetails.appointmentDate.startDate||new Date()
-//   }})
-//   res.json({message:"Appointment created"})
-//   } catch (err: any) {
-//     const message = err.message;
-//     res.status(400).json({ error: message });
-//   }
-// })
-
 patientRouter.get(
   "/getPatientData/:patientId",
   userAuth,
@@ -123,8 +100,6 @@ patientRouter.patch(
       if (!userOld) {
         throw new Error("No such user exists!");
       }
-
-      console.log(req.file);
       const dataObj = req.body;
 
       if (!req.file) {

@@ -48,11 +48,8 @@ const OTPVerification= ({verificationId, signupFormData}:{verificationId:string,
   const handleVerify = () => {
     // const verificationCode = otp.join("").toString();
     // const verificationCode = otp;
-    console.log(verificationCode)
     const credentials = firebase.auth.PhoneAuthProvider.credential(verificationId, verificationCode);
-    console.log(credentials)
     firebase.auth().signInWithCredential(credentials).then(async (userCrdential)=>{
-      console.log("User logged in: " + userCrdential.user?.toJSON())
       const phoneSignupData = {
         userType: signupFormData.userType,
         firstName: signupFormData.firstName,
@@ -60,7 +57,6 @@ const OTPVerification= ({verificationId, signupFormData}:{verificationId:string,
         phone: signupFormData.phone,
       }
       const response = await axios.post(`${BACKEND_URL}/api/v1/auth/signup`, phoneSignupData, { withCredentials: true })
-      console.log(response.data)
       const { message }: any = response.data;
       if (message !== "Invalid credentials") {
         // add necessary details to the request

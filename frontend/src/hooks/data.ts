@@ -20,13 +20,11 @@ export const UseGetUserData = (
       axios
         .get(
           `${BACKEND_URL}/api/v1/${role.split("Public")[0].toLowerCase()}/get${
-            role.split("Public")[0]
+            role
           }Data/${role === "DoctorPublic" ? userId : id}`, {withCredentials:true}
         )
         .then((res: any) => {
           setUserData(res.data.userDetails);
-          console.log(res.data.userDetails);
-          console.log("safeData: ", res.data.userDetails);
           setUser(res.data.userDetails);
           if (setEditFormData) {
             setEditFormData(res.data.userDetails);
@@ -35,7 +33,6 @@ export const UseGetUserData = (
             setScheduleData(res.data.userDetails.availability);
           }
           setIsLoading(false);
-          console.log(res.data.userDetails.availability);
         })
         .catch((err: any) =>{
           toast({
@@ -81,7 +78,6 @@ export const UseGetAllStaffData = (
 
           setAllStaffData(uniqueUsers); // Update local state
           setUsers(uniqueUsers); // Ensure no duplicates in the global users array
-          console.log("safeData: ", uniqueUsers);
           setIsLoading(false);
         }).catch((err: any) =>{
           console.log(err)
@@ -158,8 +154,6 @@ export const UseGetAllDataPatient = (
           setPrescriptions(uniquePrescriptions);
           setAllAppointments(uniqueAppointments); // Update local state
           setAppointments(uniqueAppointments); // Ensure no duplicates in the global users array
-          console.log("safeData: ", uniqueAppointments);
-          console.log("safeDataPres: ", uniquePrescriptions);
           setIsLoading(false);
         }).catch((err: any) =>{
           toast({
@@ -223,8 +217,6 @@ export const UseGetAllDataDoctor = (
           setPatients(uniquePatients);
           setAllAppointments(uniqueAppointments); // Update local state
           setAppointments(uniqueAppointments); // Ensure no duplicates in the global users array
-          console.log("Appointments ", uniqueAppointments);
-          console.log("Patients ", uniquePatients);
           setIsLoading(false);
         }).catch((err: any) =>{
           toast({

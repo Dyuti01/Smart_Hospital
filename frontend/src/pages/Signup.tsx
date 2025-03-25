@@ -17,7 +17,7 @@ import { RecaptchaVerifier, signInWithCredential, signInWithPhoneNumber, } from 
 
 import firebase from "../firebase";
 import { error } from "console";
-import { ToastProvider } from "../ui/patientProfile/toast";
+import { Toast, ToastProvider } from "../ui/patientProfile/toast";
 import signupContext from "../utils/signupContext";
 import { Button } from "../ui/patientProfile/button";
 import { toast } from "../ui/patientProfile/use-toast";
@@ -67,27 +67,37 @@ export function SignupForm() {
       firebase.auth().signInWithPhoneNumber(signupFormData.phone, verifier).then((confirmationRes) => {
         setVerificationId(confirmationRes.verificationId)
         // console.log(confirmationRes)
-        console.log("OTP got sent")
         setIsSendingOtp(false)
         setIsSentOtp(true)
         verificationData.setVerifyDataSignup({signupFormData:signupFormData, verificationId:confirmationRes.verificationId})
         navigate('/otp_verification_signup')
         // Toast
       }).catch((error) => {
-        console.log("Error sending OTP: " + error)
+        toast({
+          title: "Something wrong",
+          description: `${error}`,
+          variant: "destructive",
+          duration:5000
+        })
+        setIsSendingOtp(false)
       })
-
     }
-    catch (err) {
+    catch (err:any) {
       
       console.error(err)
+      const message = err.response.data.error;
+      toast({
+        title: "Something wrong",
+        description: `${message}`,
+        variant: "destructive",
+        duration:5000
+      })
+      setIsSendingOtp(false)
     }
-
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(signupFormData);
     // api call to backend
     try {
       if (signupFormData.authenticateMethod === "phone") {
@@ -99,7 +109,6 @@ export function SignupForm() {
           phone: signupFormData.phone
         }
         const response = await axios.post(`${BACKEND_URL}/api/v1/auth/signupCheck`, signupPhoneData, { withCredentials: true })
-        console.log(response.data)
         sendOtp()
       }
       else if (signupFormData.authenticateMethod === "email") {
@@ -112,7 +121,6 @@ export function SignupForm() {
           password: signupFormData.password,
         }
         const response = await axios.post(`${BACKEND_URL}/api/v1/auth/signup`, signupEmailData, { withCredentials: true })
-        console.log(response.data)
         setIsUserCreating(false)
         setIsUserCreated(true)
         const { message }: any = response.data;
@@ -127,7 +135,6 @@ export function SignupForm() {
     }
     catch (err:any) {
       const message = err.response.data.error;
-      console.log(err)
       toast({
         title: "Something wrong",
         description: `${message}`,
@@ -162,7 +169,7 @@ export function SignupForm() {
               <select onChange={(e) => setSignupFormData({ ...signupFormData, userType: e.target.value })} id="countries" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" defaultValue={"Choose"}>
                 <option defaultValue="Choose">Choose</option>
                 <option value="Patient">Patient</option>
-                {/* <option value="Doctor">Doctor</option>
+                {/* <option value="Admin">Doctor</option>
                 <option value="Others">Other Staff</option> */}
               </select>
             </LabelInputContainer>

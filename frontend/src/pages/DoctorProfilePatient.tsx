@@ -22,7 +22,7 @@ import { Label } from "../ui/patientProfile/label"
 import { Textarea } from "../ui/patientProfile/textarea"
 import { cn } from "../lib/utils"
 import { AceternityNav } from "../components/AceternaityNav"
-import { BACKEND_URL, PAYMENT_KEY_ID } from "../config"
+import { BACKEND_URL, FRONTEND_URL, PAYMENT_KEY_ID } from "../config"
 import axios from "axios"
 import { DoctorPublicProfileShimmer } from "./shimmer/doctor-public-profile-shimmer"
 import { UseGetUserData } from "../hooks/data"
@@ -251,7 +251,8 @@ export default function DoctorPublicProfile() {
       "description": "Test Transaction",
       "image": "/logo.png",
       "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-      "callback_url": `${BACKEND_URL}/api/v1/razorpay/verifyPayment`,
+      "callback_url": `${BACKEND_URL}/api/v1/razorpay/isDonePayment`,
+      // "callback_url": `${FRONTEND_URL}/paymentSuccess`,
       "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
         "name": customerInfo.customerName, //your customer's name
         "email": customerInfo.email,

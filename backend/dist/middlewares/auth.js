@@ -22,9 +22,6 @@ const userAuth = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
         });
         const cookies = req.cookies;
         const { token } = cookies;
-        if (req.method === "PATCH") {
-            req.body = { updateData: req.body };
-        }
         if (!token) {
             throw new Error("Invalid token!");
         }
@@ -35,7 +32,9 @@ const userAuth = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
         if (!user) {
             throw new Error("User not present!");
         }
-        req.body = Object.assign({ userId, user }, req.body);
+        const userContext = { fullName: user.firstName + " " + user.lastName, avatarUrl: user.avatarUrl, role: user.userType };
+        req.body = Object.assign({ userId, user: userContext }, req.body);
+        yield prisma.$disconnect();
         next();
     }
     catch (err) {

@@ -20,19 +20,57 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const smart_clinic_1 = require("@dyuti_01/smart_clinic");
 const client_1 = require("@prisma/client");
 exports.authRouter = express_1.default.Router();
+exports.authRouter.post("/signupCheck", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const prisma = new client_1.PrismaClient({
+            datasourceUrl: process.env.DATABASE_URL,
+        });
+        const { email, password, phone, userType } = req.body;
+        if (!phone) {
+            const user = yield prisma.user.findUnique({
+                where: {
+                    email: email,
+                },
+            });
+            if (user) {
+                res.status(409).json({ error: "User with this email already exists!" });
+                return;
+            }
+            res.json({ message: "Go to go for signup." });
+            return;
+        }
+        else {
+            const user = yield prisma.user.findUnique({
+                where: {
+                    phone: phone,
+                },
+            });
+            if (user) {
+                res
+                    .status(409)
+                    .json({ error: "User with this phone number already exists!" });
+                return;
+            }
+            res.json({ message: "Go to go for signup." });
+            return;
+        }
+    }
+    catch (err) {
+        const message = err.message;
+        res.status(400).json({ error: message });
+    }
+}));
 exports.authRouter.post("/signup", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log(req.body);
         const prisma = new client_1.PrismaClient({
             datasourceUrl: process.env.DATABASE_URL,
         });
         const body = req.body;
-        console.log(body);
         const { success, error } = smart_clinic_1.signUpInput.safeParse(body);
         if (!success) {
             throw new Error(error.message);
         }
-        const { firstName, lastName, email, password, userType, phone, authenticateMethod, } = req.body;
+        const { firstName, lastName, email, password, userType, role, phone, authenticateMethod, } = req.body;
         if (!email || !password) {
             const already = yield prisma.user.findUnique({
                 where: {
@@ -40,6 +78,7 @@ exports.authRouter.post("/signup", (req, res) => __awaiter(void 0, void 0, void 
                 },
             });
             if (already) {
+                yield prisma.$disconnect();
                 res.status(409).json({ message: "Phone number already exists!" });
                 return;
             }
@@ -61,25 +100,6 @@ exports.authRouter.post("/signup", (req, res) => __awaiter(void 0, void 0, void 
                         bloodType: bloodType,
                         allergies: allergies,
                         chronicConditions: chronicConditions,
-                    },
-                });
-            }
-            else if (userType === "Doctor") {
-                const { title, availability, experience, doctorId, about, bookingFee, rating, reviewCount, education, certifications, specializations, languages, } = req.body;
-                yield prisma.doctor.create({
-                    data: {
-                        availability: {},
-                        experience: experience || "",
-                        doctorId: doctorId,
-                        about: about || "",
-                        bookingFee: bookingFee || 150,
-                        rating: rating || 0,
-                        reviewCount: reviewCount,
-                        title: title,
-                        certifications: certifications,
-                        education: education,
-                        languages: languages,
-                        specializations: specializations,
                     },
                 });
             }
@@ -118,28 +138,55 @@ exports.authRouter.post("/signup", (req, res) => __awaiter(void 0, void 0, void 
                     },
                 });
             }
-            else if (userType === "Doctor") {
-                const { title, availability, experience, doctorId, about, bookingFee, rating, reviewCount, education, certifications, specializations, languages, } = req.body;
-                yield prisma.doctor.create({
-                    data: {
-                        availability: availability,
-                        experience: experience || "",
-                        doctorId: doctorId,
-                        about: about || "",
-                        bookingFee: bookingFee || 150,
-                        rating: rating || 0,
-                        reviewCount: reviewCount,
-                        title: title,
-                        certifications: certifications,
-                        education: education,
-                        languages: languages,
-                        specializations: specializations,
-                    },
-                });
-            }
         }
+        yield prisma.$disconnect();
         res.json({ status: "User created" });
         return;
+    }
+    catch (err) {
+        const message = err.message;
+        res.status(400).json({ error: message });
+    }
+}));
+exports.authRouter.post("/loginCheck", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const prisma = new client_1.PrismaClient({
+            datasourceUrl: process.env.DATABASE_URL,
+        });
+        const { email, password, phone, userType } = req.body;
+        if (!phone) {
+            const user = yield prisma.user.findUnique({
+                where: {
+                    email: email,
+                    userType: userType,
+                },
+            });
+            if (!user) {
+                res
+                    .status(404)
+                    .json({ error: "Invalid credentials! No such user exists." });
+                return;
+            }
+            res.json({ message: "Go to go for login." });
+            return;
+        }
+        else {
+            const user = yield prisma.user.findUnique({
+                where: {
+                    phone: phone,
+                    userType: userType,
+                },
+            });
+            if (!user) {
+                res
+                    .status(404)
+                    .json({ error: "Invalid credentials! No such user exists." });
+                return;
+            }
+            yield prisma.$disconnect();
+            res.json({ message: "Go to go for login." });
+            return;
+        }
     }
     catch (err) {
         const message = err.message;
@@ -151,16 +198,18 @@ exports.authRouter.post("/login", (req, res) => __awaiter(void 0, void 0, void 0
         const prisma = new client_1.PrismaClient({
             datasourceUrl: process.env.DATABASE_URL,
         });
-        console.log(req.body);
-        const { email, password, phone } = req.body;
+        const { email, password, phone, userType } = req.body;
         if (!phone) {
             const user = yield prisma.user.findUnique({
                 where: {
                     email: email,
+                    userType: userType,
                 },
             });
             if (!user) {
-                res.status(404).json({ error: "Invalid credentials!" });
+                res
+                    .status(404)
+                    .json({ error: "Invalid credentials! No such user exists." });
                 return;
             }
             const actualHash = user.password;
@@ -175,9 +224,17 @@ exports.authRouter.post("/login", (req, res) => __awaiter(void 0, void 0, void 0
                     path: "/",
                     httpOnly: true,
                     secure: true,
-                    sameSite: "none"
+                    sameSite: "none",
                 });
-                res.json({ message: "Successfully logged in!", userId: user.userId });
+                res.json({
+                    message: "Successfully logged in!",
+                    userId: user.userId,
+                    user: {
+                        fullName: user.firstName + " " + user.lastName,
+                        avatarUrl: user.avatarUrl,
+                        role: user.userType,
+                    },
+                });
                 return;
             }
             else {
@@ -189,10 +246,13 @@ exports.authRouter.post("/login", (req, res) => __awaiter(void 0, void 0, void 0
             const user = yield prisma.user.findUnique({
                 where: {
                     phone: phone,
+                    userType: userType,
                 },
             });
             if (!user) {
-                res.status(401).json({ error: "Invalid credentials!" });
+                res
+                    .status(404)
+                    .json({ error: "Invalid credentials! No such user exists." });
                 return;
             }
             const secret = process.env.JWT_SECRET || "";
@@ -204,9 +264,18 @@ exports.authRouter.post("/login", (req, res) => __awaiter(void 0, void 0, void 0
                 path: "/",
                 httpOnly: true,
                 secure: true,
-                sameSite: "none"
+                sameSite: "none",
             });
-            res.json({ message: "Successfully logged in!", userId: user.userId });
+            res.json({
+                message: "Successfully logged in!",
+                userId: user.userId,
+                user: {
+                    fullName: user.firstName + " " + user.lastName,
+                    avatarUrl: user.avatarUrl,
+                    role: user.userType,
+                },
+            });
+            yield prisma.$disconnect();
             return;
         }
     }
@@ -217,9 +286,14 @@ exports.authRouter.post("/login", (req, res) => __awaiter(void 0, void 0, void 0
 }));
 exports.authRouter.post("/logout", auth_1.userAuth, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        res
-            .clearCookie("token", { path: "/" })
-            .json({ message: "Logout successfully!" });
+        res.clearCookie("token", {
+            path: "/",
+            httpOnly: true,
+            secure: true,
+            sameSite: "none",
+        });
+        res.json({ message: "Logout successfully!" });
+        return;
     }
     catch (err) {
         const message = err.message;
@@ -259,3 +333,14 @@ exports.authRouter.patch("/forgotPassword", (req, res) => __awaiter(void 0, void
         res.status(400).json({ error: message });
     }
 }));
+exports.authRouter.get("/loggedCheck", auth_1.userAuth, (req, res) => {
+    try {
+        res.json({ userId: req.body.userId, user: req.body.user });
+        return;
+    }
+    catch (err) {
+        const message = err.message;
+        res.status(400).json({ error: message });
+        return;
+    }
+});

@@ -3,10 +3,8 @@ import { Landing } from './components/Landing'
 import { BrowserRouter, redirect, Route, Routes, useNavigate } from 'react-router'
 import { SignupForm } from './pages/Signup'
 import { SigninForm } from './pages/Signin'
-import DoctorProfile from './pages/DoctorProfilePersonal'
 import PatientProfileV0 from './pages/patient-profile'
 import PaymentSuccess from './pages/PaymentSuccess'
-import PatientProfileTest from './pages/patient-profile-test'
 import DoctorPublicProfile from './pages/DoctorProfilePatient'
 import OTPVerificationSignup from './pages/OTPverificationSignup'
 import AdminLogin from './pages/admin/adminLogin'
@@ -21,7 +19,6 @@ import AdminDashboard from './pages/admin/AdminDashboard'
 import UserManagement from './pages/admin/UserManagement'
 import LeaveManagement from './pages/admin/LeaveManagement'
 import NotFound404 from './pages/404Notfound'
-import PatientProfileTest1 from './pages/patient-profile-test1'
 import DoctorProfileTest from './pages/doctor-profile-test'
 import UserManagementTest from './pages/admin/UserManagementTest'
 import OTPVerificationAttendence from './pages/OTPverificationAttendence'
@@ -72,7 +69,6 @@ function App() {
 
 useEffect(()=>{
   axios.get(`${BACKEND_URL}/api/v1/auth/loggedCheck`, {withCredentials:true}).then((res:any)=>{
-    console.log("Global:", res.data);
     auth.login(res.data.userId, JSON.stringify(res.data.user))
    }).catch((error)=>{
      auth.logout();
@@ -87,15 +83,13 @@ useEffect(()=>{
     
       {/* <Appbar/> */}
     <Routes>
-      <Route path='/' element={<Landing/>}/>
+      {/* <Route path='/' element={<Landing/>}/> */}
       <Route path='/signup' element={<SignupForm/>}/>
       <Route path='/signin' element={<SigninForm/>}/>
       {/* <Route path='/doctor_profile' element={<DoctorProfile/>}/> */}
       <Route path='/doctor_profile_public/:doctorId' element={<DoctorPublicProfile/>}/>
-      <Route path='/doctor_profile_test' element={<DoctorProfile/>}/>
       <Route path='/doctor_profile' element={<DoctorProfileTest/>}/>
       <Route path='/patient_profile' element={<PatientProfileV0/>}/>
-      <Route path='/patient_profile_test' element={<PatientProfileTest1/>}/>
       <Route path='/paymentSuccess' element={<PaymentSuccess/>}/>
       <Route path='/otp_verification_signup' element={<OTPVerificationSignup/>}/> 
       <Route path='/otp_verification_login' element={<OTPVerificationLogin/>}/> 
@@ -107,6 +101,7 @@ useEffect(()=>{
       <Route path='/admin/userManageTest' element={<UserManagementTest/>}/>
       <Route path='/admin/leaveManage' element={<LeaveManagement/>}/>
       <Route path='/doctorsList' element={<DoctorsListPage/>}/>
+      <Route path='/' element={<DoctorsListPage/>}/>
       
       <Route path='/*' element={<NotFound404/>}/>
       

@@ -36,7 +36,6 @@ const LoginPage = () => {
         email: email,
         password: password,
         authenticateMethod: "email",}, { withCredentials: true })
-      console.log(response.data)
       const { message, userId, user }: any = response.data;
       // localStorage.setItem("userId", userId)
 

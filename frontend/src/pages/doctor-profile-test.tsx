@@ -515,7 +515,6 @@ export default function DoctorProfileTest() {
   const handleCreatePrescription = async (appointmentId: string) => {
     // In a real app, this would save the prescription to the database
     try {
-      console.log(newPrescription)
       setIsPrescriptionCreating(true);
       await axios.patch(`${BACKEND_URL}/api/v1/doctor/createPrescription/${appointmentId}`, newPrescription, {
         withCredentials: true, headers: {
@@ -575,8 +574,6 @@ export default function DoctorProfileTest() {
           'Content-Type': 'multipart/form-data'
         }
       }).then((res: any) => {
-        console.log(res.data.doctorDetails)
-        console.log("safeData: ", res.data.doctorDetails)
         setDoctor(res.data.doctorDetails)
         setEditFormData(res.data.doctorDetails)
         setIsEditing(false);
@@ -612,8 +609,6 @@ export default function DoctorProfileTest() {
       axios.patch(`${BACKEND_URL}/api/v1/doctor/editSchedule/${doctorId}`, scheduleData, {
         withCredentials: true
       }).then((res: any) => {
-        console.log(res.data.scheduleData)
-        console.log("safeData: ", res.data.scheduleData)
         setScheduleData(res.data.scheduleData)
         setEditFormData(res.data.scheduleData)
         setIsEditingSchedule(false);
@@ -676,7 +671,6 @@ export default function DoctorProfileTest() {
 
   const sendOtp = (data: { appointmentId: string, phone: string, attended: boolean }) => {
     try {
-      console.log(data)
       if (recaptchaRef.current) {
         //@ts-ignore
         recaptchaRef.current.innerHTML = '<div id="recaptcha-container"></div>'
@@ -1267,7 +1261,7 @@ export default function DoctorProfileTest() {
                       <div key={day} className="flex justify-between items-center">
                         <div className="font-medium capitalize">{day}</div>
                         <div>
-                          {slots.length > 0 ? (
+                          {slots.length > 0 ? ( slots && 
                             slots.map((slot: any, index: any) => (
                               <div key={index} className="flex items-center gap-2">
                                 {isEditingSchedule ? (
@@ -1329,7 +1323,7 @@ export default function DoctorProfileTest() {
                             </div>
                             {slots.length > 0 ? (
                               <div className="space-y-2">
-                                {slots.map((slot: any, index: any) => (
+                                {slots && slots.map((slot: any, index: any) => (
                                   <div key={index} className="flex items-center gap-2">
                                     <Input
                                       type="time"
@@ -1572,7 +1566,6 @@ export default function DoctorProfileTest() {
                                           value={selectedAppointment?.notes || ""}
                                           placeholder="Add appointment notes here..."
                                           className="min-h-[100px]"
-                                          onClick={() => console.log(selectedAppointment)}
                                           onChange={(e) => {
                                             setAppointmentNotes(e.target.value)
                                             // In a real app, this would update the appointment notes in state
@@ -1960,10 +1953,10 @@ export default function DoctorProfileTest() {
                     <div className="flex items-end justify-between">
                       <div>
                         <h3 className="text-sm font-semibold">Last prescription</h3>
-                        <span className={cn("text-sm text-muted-foreground")}>Prescription_{selectedAppointment?.prescription.prescriptionUrl.split('/')[selectedAppointment?.prescription.prescriptionUrl.split('/').length - 1]}</span>
+                        <span className={cn("text-sm text-muted-foreground")}>{selectedAppointment?.prescription?.prescriptionUrl?`Prescription_${selectedAppointment?.prescription?.prescriptionUrl.split('/')[selectedAppointment?.prescription?.prescriptionUrl.split('/').length - 1]}`:`No last prescription`}</span>
                       </div>
 
-                      <Button
+                      {selectedAppointment?.prescription.prescriptionUrl && <Button
                         variant="outline"
                         size="sm"
                         onClick={() => window.open(selectedAppointment?.prescription.prescriptionUrl, "_blank")}
@@ -1971,7 +1964,7 @@ export default function DoctorProfileTest() {
                       >
                         <FileText className="h-4 w-4" />
                         <span>View</span>
-                      </Button>
+                      </Button>}
                     </div>
 
                   </div>

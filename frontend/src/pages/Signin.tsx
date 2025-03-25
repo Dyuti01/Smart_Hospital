@@ -55,12 +55,28 @@ export function SigninForm() {
         // Toast
       }).catch((error) => {
         console.log("Error sending OTP: " + error)
+        toast({
+          title: "Something wrong",
+          description: `${error?.errors?error.errors[9]:""}`,
+          variant: "destructive",
+          duration: 5000
+        })
+        setIsSendingOtp(false)
       })
 
     }
-    catch (err) {
+    catch (err: any) {
 
       console.error(err)
+      const message = err.response.data.error;
+      toast({
+        title: "Something wrong",
+        description: `${message}`,
+        variant: "destructive",
+        duration: 5000
+      })
+
+      setIsSendingOtp(false);
     }
 
   }
@@ -70,13 +86,11 @@ export function SigninForm() {
     try {
       if (signinFormData.authenticateMethod === "email") {
         setIsLogging(true)
-        console.log(signinFormData);
         const response = await axios.post(`${BACKEND_URL}/api/v1/auth/login`, signinFormData, { withCredentials: true })
-        console.log(response.data)
         const { message, userId, user }: any = response.data;
         // localStorage.setItem("userId", userId)
 
-				auth.login(userId, JSON.stringify(user));
+        auth.login(userId, JSON.stringify(user));
 
         if (message !== "Invalid credentials") {
           // add necessary details to the request
@@ -84,15 +98,15 @@ export function SigninForm() {
 
         setIsLogging(false);
         setIsLoggedin(true);
-        if (signinFormData.userType==="Patient"){
-					navigate('/patient_profile')
-				}
-				else if (signinFormData.userType==="Doctor"){
-					navigate("/doctor_profile")
-				}
-				else{
-					navigate("/staff_profile")
-				}
+        if (signinFormData.userType === "Patient") {
+          navigate('/patient_profile')
+        }
+        else if (signinFormData.userType === "Doctor") {
+          navigate("/doctor_profile")
+        }
+        else {
+          navigate("/staff_profile")
+        }
       }
       else if (signinFormData.authenticateMethod === "phone") {
         setIsSendingOtp(true);
@@ -102,26 +116,17 @@ export function SigninForm() {
           phone: signinFormData.phone,
         }
         const response = await axios.post(`${BACKEND_URL}/api/v1/auth/loginCheck`, phoneSigninData, { withCredentials: true })
-        console.log(response.data)
-
-        console.log(signinFormData);
         sendOtp();
-        // const response = await axios.post(`${BACKEND_URL}/api/v1/auth/login`, signinFormData, { withCredentials: true })
-        // console.log(response.data)
-        // const { message }: any = response.data;
-        // if (message !== "Invalid credentials") {
-        //   // add necessary details to the request
-        // }
       }
     }
-    catch (err:any) {
+    catch (err: any) {
       const message = err.response.data.error;
       console.log(err)
       toast({
         title: "Something wrong",
         description: `${message}`,
         variant: "destructive",
-        duration:3000
+        duration: 3000
       })
       setIsSendingOtp(false)
       setIsLogging(false)
@@ -239,7 +244,7 @@ export function SigninForm() {
             type="submit"
           >
             {/* <IconBrandGoogle className="h-4 w-4 text-neutral-800 dark:text-neutral-300" /> */}
-            {/* <img
+        {/* <img
               className="max-w-[20px]"
               src="https://ucarecdn.com/8f25a2ba-bdcf-4ff1-b596-088f330416ef/"
               alt="Google"

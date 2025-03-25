@@ -210,7 +210,6 @@ const UserManagement = () => {
     setIsAddingUser(true)
 
     const response = await axios.post(`${BACKEND_URL}/api/v1/admin/addNewUser`, newUser, { withCredentials: true })
-    console.log(response.data)
 
     setIsAddingUser(false);
     // setUsers([...users, ...staffs])
@@ -227,8 +226,6 @@ const UserManagement = () => {
       availability:{}
     })
     setIsAddUserDialogOpen(false)
-
-    console.log(newUser)
 
     toast({
       title: "User added successfully",

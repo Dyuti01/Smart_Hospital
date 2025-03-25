@@ -32,7 +32,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/patientProfile/t
 import { Badge } from "../ui/patientProfile/badge"
 import { Textarea } from "../ui/patientProfile/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/patientProfile/select"
-import { BottomGradient } from "./DoctorProfile"
 import { AceternityNav } from "../components/AceternaityNav"
 import axios from "axios"
 import { BACKEND_URL } from "../config"
@@ -449,8 +448,6 @@ export default function PatientProfileV0() {
           'Content-Type': 'multipart/form-data'
         }
       }).then((res: any) => {
-        console.log(res.data.patientDetails)
-        console.log("safeData: ", res.data.patientDetails)
         setPatient(res.data.patientDetails)
         setEditFormData(res.data.patientDetails)
         setIsEditing(false);

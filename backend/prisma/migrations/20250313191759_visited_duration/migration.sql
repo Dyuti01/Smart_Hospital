@@ -1,4 +1,0 @@
--- AlterTable
-ALTER TABLE "Appointment" ALTER COLUMN "visited" DROP NOT NULL,
-ALTER COLUMN "visited" DROP DEFAULT,
-ALTER COLUMN "duration" SET DEFAULT 60;

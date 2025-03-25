@@ -1,18 +1,22 @@
 import { useState } from "react"
 import { Menu, X } from "lucide-react"
 import CusLink from "./CusLink"
+import { useAuth } from "../utils/AuthContext"
 
 
 
 export default function HamburgerMenu() {
   const [isOpen, setIsOpen] = useState(false)
-  const menuItems = [
+  const auth = useAuth();
+  const menuItems = auth.isAuthenticated?[
     { name: "Home", href: "/" },
-    { name: "Services", href: "#" },
-    { name: "Contact", href: "#" },
+    { name: "Doctors", href: "/" },
+    { name: "Profile", href: `/${auth.user?.role.toLowerCase()}_profile` },
+  ]:[
+    { name: "Home", href: "/" },
+    { name: "Doctors", href: "/" },
     { name: "Signin", href: "/signin" },
     { name: "Create account", href: "/signup" },
-    { name: "Profile", href: "/profile" },
   ]
 
   return (
@@ -39,7 +43,7 @@ export default function HamburgerMenu() {
                 <li key={item.name}>
                   <CusLink
                     to={item.href}
-                    className="block text-base font-medium hover:text-gray-400 py-2 hover:cursor-pointer"
+                    className="block text-base font-medium hover:text-cyan-600 py-2 hover:cursor-pointer"
                     // onClick={() => setIsOpen(false)}
                   >
                     {item.name}

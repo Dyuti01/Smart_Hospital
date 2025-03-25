@@ -84,15 +84,10 @@ export default function OTPVerificationAttendence() {
 		try {
 			setIsVerifying(true)
 			const verificationCode = otp.join("").toString();
-			console.log(verificationCode)
-			console.log(verificationData)
 			const credentials = firebase.auth.PhoneAuthProvider.credential(verificationData.userData.verificationId || "", verificationCode);
-			console.log(credentials)
 			firebase.auth().signInWithCredential(credentials).then(async (userCrdential) => {
-				console.log("User marked: " + userCrdential.user?.toJSON())
 				const { appointmentId } = verificationData.userData;
 				const response = await axios.patch(`${BACKEND_URL}/api/v1/doctor/markAttendence/${verificationData.userData.appointmentId}`, { isAttended:true }, { withCredentials: true })
-				console.log(response.data)
 
 				setIsVerified(true)
 				setIsVerifying(false)
