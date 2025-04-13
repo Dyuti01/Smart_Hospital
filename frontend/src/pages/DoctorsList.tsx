@@ -14,6 +14,7 @@ import { UseGetAllDoctorsList } from "../hooks/data"
 import DoctorsListLoading from "./shimmer/doctorsList-shimmer"
 import { AceternityNav } from "../components/AceternaityNav"
 import { AuroraBackground } from "../ui/AuroraBackground"
+import Footer from "../components/Footer"
 
 // Mock data for doctors
 const doctorsData = [
@@ -69,58 +70,58 @@ const doctorsData = [
     avatar: "/placeholder.svg?height=300&width=300",
     featured: false,
   },
-  {
-    id: "d5",
-    name: "Dr. Lisa Martinez",
-    specialty: "Dermatologist",
-    hospital: "Skin Care Clinic",
-    location: "Miami, FL",
-    rating: 4.9,
-    reviewCount: 112,
-    experience: "9+ years",
-    availability: "Available Today",
-    avatar: "/placeholder.svg?height=300&width=300",
-    featured: true,
-  },
-  {
-    id: "d6",
-    name: "Dr. Robert Davis",
-    specialty: "Gastroenterologist",
-    hospital: "Digestive Health Center",
-    location: "Houston, TX",
-    rating: 4.5,
-    reviewCount: 76,
-    experience: "11+ years",
-    availability: "Next Available: Tuesday",
-    avatar: "/placeholder.svg?height=300&width=300",
-    featured: false,
-  },
-  {
-    id: "d7",
-    name: "Dr. Jennifer Lee",
-    specialty: "Psychiatrist",
-    hospital: "Mental Health Institute",
-    location: "Seattle, WA",
-    rating: 4.8,
-    reviewCount: 103,
-    experience: "7+ years",
-    availability: "Available Today",
-    avatar: "/placeholder.svg?height=300&width=300",
-    featured: false,
-  },
-  {
-    id: "d8",
-    name: "Dr. David Brown",
-    specialty: "Ophthalmologist",
-    hospital: "Vision Care Center",
-    location: "Philadelphia, PA",
-    rating: 4.7,
-    reviewCount: 91,
-    experience: "14+ years",
-    availability: "Next Available: Wednesday",
-    avatar: "/placeholder.svg?height=300&width=300",
-    featured: false,
-  },
+  // {
+  //   id: "d5",
+  //   name: "Dr. Lisa Martinez",
+  //   specialty: "Dermatologist",
+  //   hospital: "Skin Care Clinic",
+  //   location: "Miami, FL",
+  //   rating: 4.9,
+  //   reviewCount: 112,
+  //   experience: "9+ years",
+  //   availability: "Available Today",
+  //   avatar: "/placeholder.svg?height=300&width=300",
+  //   featured: true,
+  // },
+  // {
+  //   id: "d6",
+  //   name: "Dr. Robert Davis",
+  //   specialty: "Gastroenterologist",
+  //   hospital: "Digestive Health Center",
+  //   location: "Houston, TX",
+  //   rating: 4.5,
+  //   reviewCount: 76,
+  //   experience: "11+ years",
+  //   availability: "Next Available: Tuesday",
+  //   avatar: "/placeholder.svg?height=300&width=300",
+  //   featured: false,
+  // },
+  // {
+  //   id: "d7",
+  //   name: "Dr. Jennifer Lee",
+  //   specialty: "Psychiatrist",
+  //   hospital: "Mental Health Institute",
+  //   location: "Seattle, WA",
+  //   rating: 4.8,
+  //   reviewCount: 103,
+  //   experience: "7+ years",
+  //   availability: "Available Today",
+  //   avatar: "/placeholder.svg?height=300&width=300",
+  //   featured: false,
+  // },
+  // {
+  //   id: "d8",
+  //   name: "Dr. David Brown",
+  //   specialty: "Ophthalmologist",
+  //   hospital: "Vision Care Center",
+  //   location: "Philadelphia, PA",
+  //   rating: 4.7,
+  //   reviewCount: 91,
+  //   experience: "14+ years",
+  //   availability: "Next Available: Wednesday",
+  //   avatar: "/placeholder.svg?height=300&width=300",
+  //   featured: false,
+  // },
 ]
 
 export default function DoctorsListPage() {
@@ -364,6 +365,8 @@ export default function DoctorsListPage() {
         </div>
       </div>
     </div>
+    <Footer/>
+    
     </AuroraBackground>
     </>
   )

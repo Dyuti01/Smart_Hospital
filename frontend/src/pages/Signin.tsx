@@ -138,7 +138,7 @@ export function SigninForm() {
     <div className="h-screen flex flex-col justify-center items-center z-[1000] bg-[url(/backcover.png)] bg-cover bg-center">
       <div className="max-w-md w-[400px] mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
         <CusLink to='/' className="flex gap-[5px] items-center justify-center text-white hover:cursor-pointer mb-[10px]" >
-          <Stethoscope className="text-blue-700" />
+          <Stethoscope className="text-cyan-600" />
           <span className="text-xl text-gray-900 poppins-regular dark:text-white">smartClinic</span>
         </CusLink>
         <h2 className="font-bold text-4xl text-neutral-800 dark:text-neutral-200">
@@ -155,7 +155,7 @@ export function SigninForm() {
               <option defaultValue="Choose">Choose</option>
               <option value="Patient">Patient</option>
               <option value="Doctor">Doctor</option>
-              <option value="Others">Other Staff</option>
+              {/* <option value="Others">Other Staff</option> */}
             </select>
           </LabelInputContainer>
           <LabelInputContainer className="mb-4">

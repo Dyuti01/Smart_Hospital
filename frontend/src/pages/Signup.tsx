@@ -153,7 +153,7 @@ export function SignupForm() {
 
         <div className="md:w-[500px] rounded-none md:rounded-2xl px-4 pt-4 md:px-8 md:pt-8 shadow-input bg-white dark:bg-black">
           <CusLink to='/' className="flex gap-[5px] items-center justify-center text-white hover:cursor-pointer mb-[10px]" >
-            <Stethoscope className="text-blue-700" />
+            <Stethoscope className="text-cyan-600" />
             <span className="text-xl text-gray-900 poppins-regular dark:text-white">smartClinic</span>
           </CusLink>
           <h2 className="font-bold text-4xl text-neutral-800 dark:text-neutral-200">

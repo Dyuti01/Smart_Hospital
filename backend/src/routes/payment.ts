@@ -113,10 +113,10 @@ paymentRouter.post("/webhook", async (req: Request, res: Response) => {
       return;
     } 
 
-    if (event === "payment.captured") {
+    else if (event === "payment.captured") {
       const paymentId = payment.order_id;
 
-      let existingPayment = await prisma.payment.findUnique({
+      const existingPayment = await prisma.payment.findUnique({
         where: { paymentId },
       });
 

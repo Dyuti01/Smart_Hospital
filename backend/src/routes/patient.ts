@@ -322,7 +322,7 @@ export const makeAppointment = async (appointmentDetails: any) => {
         patientPersonEmail: appointmentDetails.patientPersonEmail||"",
         patientPersonPhone: appointmentDetails.patientPersonPhone||"",
         appointmentDateTime: appointmentDetails.date,
-        timeSlot: appointmentDetails.timeSlot,
+        timeSlotId: appointmentDetails.timeSlot.id,
         reasonForAppointment: appointmentDetails.patient.reason,
         status: "SCHEDULED",
         // location: "Ask at the counter."

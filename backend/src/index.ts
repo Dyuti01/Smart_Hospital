@@ -10,8 +10,9 @@ const path = require("path");
 const https = require("https");
 const cors = require("cors")
 const bodyParser = require("body-parser")
+const ngrok = require("@ngrok/ngrok")
 
-const ip = "192.168.237.1";
+const ip = "192.168.102.1";
 const port = 7778;
 
 const options = {
@@ -22,7 +23,7 @@ const options = {
 const app = express();
 
 app.use(cors({
-  origin:["https://smart-clinic2.vercel.app","http://localhost:5173","http://192.168.237.1:5173"],
+  origin:["https://smart-clinic2.vercel.app","http://localhost:5173","http://192.168.102.1:5173"],
   credentials:true,
 }))
 

@@ -121,6 +121,8 @@ model TimeSlot {
   id       String @id @default(uuid())
   start    String
   end      String
+  appointment Appointment[]
+  
   availabilityId   String
   availability Availability @relation(fields: [availabilityId], references: [id], onDelete: Cascade)
   mondayAvailabilityId   String?  // Separate fields for each day
@@ -162,7 +164,8 @@ model Appointment{
   doctorId String
   doctor Doctor @relation(fields: [doctorId], references: [doctorId])
   reasonForAppointment String?
-  timeSlot Json
+  timeSlotId String
+  timeSlot TimeSlot @relation(fields: [timeSlotId], references: [id])
   visited Boolean?
   location      String @default("Ask at the counter")           // e.g. "Main Hospital, Room 305"
   duration      Int @default(60)              // in minutes

@@ -107,17 +107,17 @@ function Navbar({ className }: { className?: string }) {
             <HoveredLink href="/enterprise">Enterprise</HoveredLink>
           </div>
         </MenuItem> */}
-          <CusLink to='/' className=' h-[full] hover:text-blue-500 hover:cursor-pointer transition-all ease-in-out dark:text-white'>Home</CusLink>
-          <CusLink to='/doctorsList' className=' h-[full] hover:text-blue-500 hover:cursor-pointer transition-all ease-in-out dark:text-white'>Doctors</CusLink>
-          {!auth.isAuthenticated && <CusLink to='/signin' className='h-[full] hover:text-blue-500 hover:cursor-pointer transition-all ease-in-out dark:text-white'>Signin</CusLink>}
-          {!auth.isAuthenticated && <CusLink to='/signup' className='h-[full] hover:text-blue-500 hover:cursor-pointer transition-all ease-in-out dark:text-white'>Create account</CusLink>}
+          <CusLink to='/' className=' h-[full] hover:text-cyan-700 hover:cursor-pointer transition-all ease-in-out dark:text-white'>Home</CusLink>
+          <CusLink to='/doctorsList' className=' h-[full] hover:text-cyan-700 hover:cursor-pointer transition-all ease-in-out dark:text-white'>Doctors</CusLink>
+          {!auth.isAuthenticated && <CusLink to='/signin' className='h-[full] hover:text-cyan-700 hover:cursor-pointer transition-all ease-in-out dark:text-white'>Signin</CusLink>}
+          {!auth.isAuthenticated && <CusLink to='/signup' className='h-[full] hover:text-cyan-700 hover:cursor-pointer transition-all ease-in-out dark:text-white'>Create account</CusLink>}
           {(auth.isAuthenticated && auth.user?.role!=="Admin") && <CusLink to={`/${auth.user?.role.toLowerCase()}_profile`} className='h-[full] hover:text-blue-500 hover:cursor-pointer transition-all ease-in-out dark:text-white'>Welcome, {auth.user?.fullName.split(' ')[0]}</CusLink>}
-          {(auth.isAuthenticated && auth.user?.role==="Admin") && <div className='h-[full] hover:text-blue-500 hover:cursor-pointer transition-all ease-in-out dark:text-white'>Welcome, {auth.user?.fullName.split(' ')[0]}</div>
+          {(auth.isAuthenticated && auth.user?.role==="Admin") && <div className='h-[full] hover:text-cyan-700 hover:cursor-pointer transition-all ease-in-out dark:text-white'>Welcome, {auth.user?.fullName.split(' ')[0]}</div>
           }
 
-{auth.user?.role==="Admin" && <CusLink to={`/admin/userManage`} className='h-[full] hover:text-blue-500 hover:cursor-pointer transition-all ease-in-out dark:text-white'>User manage</CusLink>}
+{auth.user?.role==="Admin" && <CusLink to={`/admin/userManage`} className='h-[full] hover:text-cyan-700 hover:cursor-pointer transition-all ease-in-out dark:text-white'>User manage</CusLink>}
 
-          {(auth.isAuthenticated && auth.user?.role!=="Admin") && <CusLink to={`/${auth.user?.role.toLowerCase()}_profile`} className='h-[full] hover:text-blue-500 hover:cursor-pointer transition-all ease-in-out dark:text-white'>Profile</CusLink>}
+          {(auth.isAuthenticated && auth.user?.role!=="Admin") && <CusLink to={`/${auth.user?.role.toLowerCase()}_profile`} className='h-[full] hover:text-cyan-700 hover:cursor-pointer transition-all ease-in-out dark:text-white'>Profile</CusLink>}
           {auth.isAuthenticated && <Button onClick={handleLogout} className='text-white bg-gradient-to-r from-cyan-700 to-teal-600'>
             {!isLoggingOut && "Logout"}
             {isLoggingOut &&

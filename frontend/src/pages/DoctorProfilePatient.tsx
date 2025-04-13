@@ -391,7 +391,7 @@ export default function DoctorPublicProfile() {
                 <CardFooter>
                   <Dialog open={isBookingDialogOpen} onOpenChange={setIsBookingDialogOpen}>
                     <DialogTrigger asChild>
-                      <Button className="w-full bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700">
+                      <Button onClick={()=>console.log(selectedTimeSlot)} className="w-full bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700">
                         Book Appointment
                       </Button>
                     </DialogTrigger>

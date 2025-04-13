@@ -46,28 +46,6 @@ import UserManagementShimmer from "../shimmer/user-management-shimmer"
 // Mock data for users
 const initialUsers = [
   {
-    id: "1",
-    firstName: "Dr. Sarah",
-    lastName: "Johnson",
-    email: "sarah.johnson@hospital.com",
-    role: "Doctor",
-    department: "Cardiology",
-    status: "Active",
-    registrationNumber: "",
-    avatar: "/placeholder.svg?height=40&width=40",
-  },
-  {
-    id: "2",
-    firstName: "Dr. Michael",
-    lastName: "Chen",
-    email: "michael.chen@hospital.com",
-    role: "Doctor",
-    department: "Neurology",
-    status: "Active",
-    registrationNumber: "",
-    avatar: "/placeholder.svg?height=40&width=40",
-  },
-  {
     id: "3",
     firstName: "Nurse Emma",
     lastName: "Wilson",

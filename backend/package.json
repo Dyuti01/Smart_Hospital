@@ -11,6 +11,7 @@
   "description": "",
   "dependencies": {
     "@dyuti_01/smart_clinic": "^1.0.3",
+    "@ngrok/ngrok": "^1.4.1",
     "@prisma/client": "^6.3.0",
     "@types/bcrypt": "^5.0.2",
     "@types/body-parser": "^1.19.5",
