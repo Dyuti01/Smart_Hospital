@@ -50,7 +50,7 @@ A full-stack hospital management portal that streamlines appointments, prescript
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/your-username/smart-hospital.git
+git clone https://github.com/Dyuti01/smart-hospital.git
 cd smart-hospital
 ```
 
