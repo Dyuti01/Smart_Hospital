@@ -54,8 +54,8 @@ A full-stack hospital management portal that streamlines appointments, prescript
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/Dyuti01/smart-hospital.git
-cd smart-hospital
+git clone https://github.com/Dyuti01/Smart_Hospital.git
+cd Smart_Hospital
 ```
 
 ### 2. Set up environment variables
