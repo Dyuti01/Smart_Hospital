@@ -25,18 +25,22 @@ A full-stack hospital management portal that streamlines appointments, prescript
 ## 🛠️ Tech Stack
 
 ### Frontend
-![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
-![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
-![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
-![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-000000?style=for-the-badge&logo=shadcnui&logoColor=white)
+| Technology | Purpose |
+|---|---|
+| TypeScript | Type-safe development |
+| React.js | UI framework |
+| Tailwind CSS | Styling |
+| Shadcn/ui | Component library |
 
 ### Backend
-![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
-![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
-![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white)
-![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)
-![Razorpay](https://img.shields.io/badge/Razorpay-02042B?style=for-the-badge&logo=razorpay&logoColor=3395FF)
+| Technology | Purpose |
+|---|---|
+| Node.js + Express.js | REST API server |
+| PostgreSQL | Relational database |
+| Prisma ORM | Database access layer |
+| Firebase | Phone OTP authentication |
+| Razorpay | Payment gateway |
+| Webhooks | Secure payment confirmation |
 
 ---
 
