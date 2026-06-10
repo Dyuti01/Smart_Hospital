@@ -45,8 +45,9 @@ erDiagram
         String patientId FK
         String emergencyContact
         String bloodType
-        String allergies
-        String chronicConditions
+        String[] allergies
+        String[] chronicConditions
+        String[] previousAppointmentIds
     }
 
     Doctor {
@@ -59,9 +60,9 @@ erDiagram
         Int bookingFee
         String about
         String registrationNumber
-        String certifications
-        String specializations
-        String languages
+        String[] certifications
+        String[] specializations
+        String[] languages
         String status
     }
 
@@ -145,8 +146,8 @@ erDiagram
         String doctorId FK
         String appointmentId FK
         String notes
-        Json medications
-        Json tests
+        Json[] medications
+        Json[] tests
         String prescriptionUrl
         DateTime dateTime
     }
